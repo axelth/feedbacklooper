@@ -1,6 +1,10 @@
 //cursor position fetching code inspired by Diego Perini
 //javascript.nwbox.com/cursor_position/
 //TODO Functionality for entering corrections and comments. 
+//TODO What to do with overlapping tags?
+//TODO Add errors to errorlist on creation (clicking either type or action).
+//TODO Add edit-button to errorlist
+//TODO Reset selection upon error creation? 
 //TODO decrease dependence on glob.variables.  Pass in more parameters to functions.
 //TODO decrease coupling between html and js (pass id-attributes to functions).
 var glob = {
