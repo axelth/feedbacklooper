@@ -1,11 +1,12 @@
 //cursor position fetching code inspired by Diego Perini
 //javascript.nwbox.com/cursor_position/
+//TODO Functionality for entering corrections and comments. 
 //TODO decrease dependence on glob.variables.  Pass in more parameters to functions.
 //TODO decrease coupling between html and js (pass id-attributes to functions).
 var glob = {
     "errorArray": [],
     "currentError":null,
-    //modifies currentError
+    //Create an error object (not properly defined yet) and assign it to currentError
     "createErrorStub": function createErrorStub(errorType) {
 	var submission = document.getElementById("originaltext");
 	var text = submission.value;
@@ -44,19 +45,31 @@ var glob = {
 	for (i = 0; i < this.errorArray.length; i += 1) {
 	    e = errorArray[i];
 	    newbody.appendChild(this.createTblRow([String(i + 1),
-						   e['string'],e['type'],e['action']]));
+						   e['string'],e['type'],e['action']],i));
 	}
 	table.replaceChild(newbody,oldbody);
     },
     //take an array of data and return a row with one cell for each item
-    "createTblRow": function createTblRow(data) {
-	var newrow = document.createElement('tr'),j;
+    //plus a delete-button at the end of the row.
+    //TODO factor out the button creation code.
+    "createTblRow": function createTblRow(data,i) {
+	var newrow = document.createElement('tr'),j,delBtn;
 	for (j = 0; j < data.length; j += 1) {
 	    newrow.insertCell(-1).appendChild(
 		document.createTextNode(data[j]));
 	}
+	delBtn = document.createElement('button');
+	delBtn.setAttribute('name',i);
+	delBtn.setAttribute('onclick',"glob.delError(this.name,glob.errorArray);");
+	delBtn.appendChild(document.createTextNode("delete"));
+	newrow.insertCell(-1).appendChild(delBtn);
 	return newrow;
-    },    
+    },
+    //Remove error at index from errorArray and updates the errorlist.
+    "delError": function delError(index,errorArray) {
+	errorArray.splice(index,1);
+	this.updateErrorList(errorArray);
+    },
     //It's getting obvious that I need to define a proper error object.
     "sortErrorArray": function sortErrorArray(errorArray){
 	return errorArray.sort(function(a,b){
