@@ -1,33 +1,43 @@
 <!doctype html>
 <html>
-<head charset="utf8">
-<script type="text/javascript" src="master-frontend.js"></script>
-<link rel="stylesheet" type="text/css" href="master-frontend.css">
-</head>
-<body>
-<div id="studenttext">Student's text<br><input type="textarea" name="originaltext"></div>
-<div id="errortype">Type of error<br>
-<table>
-<tr><td>omission</td></tr>
-<tr><td>word order</td></tr>
-<tr><td>lexical</td></tr>
-<tr><td>register</td></tr>
-<tr><td>tense</td></tr>
-<tr><td>voice</td></tr>
-</table>
-</div>
-<div id="editaction">Edit action<br>
-<table>
-<tr><td>delete</td></tr>
-<tr><td>replace</td></tr>
-<tr><td>edit</td></tr>
-<tr><td>move</td></tr>
-<tr><td>insert</td></tr>
-<tr><td>mark</td></tr>
-</table>
-</div>
-<div id="feedbackarea">Teachers corrections and comments</div>
-<div id="errorlist"><table></table></div>
-<div id="registerfeedback"><input type="button" onclick="" value="Register feedback"></div>
-</body>
+  <head charset="utf8">
+    <script type="text/javascript" src="master-frontend.js"></script>
+    <link rel="stylesheet" type="text/css" href="master-frontend.css">
+  </head>
+  <body>
+    <div class="left">
+      <div id="studenttext">Student's text<br>
+	<textarea id="originaltext" rows="20" cols="65"></textarea>
+      </div>
+
+      <div id="feedbackarea">Teachers corrections and comments</div>
+    </div>
+    <div class="right">
+      <div id="errortype">Type of error<br>
+	<table>
+	  <tr><td id="omission" onclick="glob.createErrorStub('omission');">omission</td></tr>
+	  <tr><td  id="wordorder" onclick="glob.createErrorStub('wordorder');">word order</td></tr>
+	  <tr><td id="lexical" onclick="glob.createErrorStub('lexical');">lexical</td></tr>
+	  <tr><td id="register" onclick="glob.createErrorStub('register');">register</td></tr>
+	  <tr><td  id="tense" onclick="glob.createErrorStub('tense');">tense</td></tr>
+	  <tr><td id="voice" onclick="glob.createErrorStub('voice');">voice</td></tr>
+	</table>
+      </div>
+      <div id="editaction">Edit action<br>
+	<table>
+	  <tr><td id="delete" onclick="glob.addActionToErrorStub('delete');">delete</td></tr>
+	  <tr><td id="replace" onclick="glob.addActionToErrorStub('replace');">replace</td></tr>
+	  <tr><td id="edit" onclick="glob.addActionToErrorStub('edit');">edit</td></tr>
+	  <tr><td id="move" onclick="glob.addActionToErrorStub('move');">move</td></tr>
+	  <tr><td id="insert" onclick="glob.addActionToErrorStub('insert');">insert</td></tr>
+	  <tr><td id="mark" onclick="glob.addActionToErrorStub('mark');">mark</td></tr>
+	</table>
+      </div>
+      <div id="errorlist">
+	<table>
+	  <tr><th>Nr</th><th>String</th><th>Type</th><th>Action</th>
+	</table></div>
+      <div id="registerfeedback"><input type="button" onclick="" value="Register feedback"></div>
+    </div>
+  </body>
 </html>
