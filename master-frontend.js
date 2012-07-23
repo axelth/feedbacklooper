@@ -1,5 +1,7 @@
 //cursor position fetching code inspired by Diego Perini
 //javascript.nwbox.com/cursor_position/
+//TODO decrease dependence on glob.variables.  Pass in more parameters to functions.
+//TODO decrease coupling between html and js (pass id-attributes to functions).
 var glob = {
     "errorArray": [],
     "currentError":null,
@@ -15,7 +17,11 @@ var glob = {
 			     'end':selEnd, 'string':text.substring(selStart,selEnd),
 			     'action':""};
     },
-    //modifies errorArray
+    //modifies errorArray and call updateErrorList on the new array.
+    //The modification consists of pushing currentError and then sorting the
+    //errorArray with sortErrorArray.
+    //TODO check for overlapping errors
+    //TODO factor out the updating of the errorArray (push,sort)
     "addActionToErrorStub": function(action) {
 	if (this.currentError === null) {
 	    window.alert("No error is marked, or marked error is already added to the error list");
@@ -24,13 +30,12 @@ var glob = {
 	this.currentError.action = action;
 	window.alert("action: " + action + " added to error\n" + this.currentError.toString());
 	this.errorArray.push(this.currentError);
+	this.sortErrorArray(this.errorArray);
 	this.updateErrorList(this.errorArray);
 	this.currentError = null;
     },
 
     //Update the errorlist by constructing a new tbody from the errorArray.
-    //TODO, I need to sort the errorArray based on index.
-    //I also need to check for overlapping errors, which I can't handle yet
     "updateErrorList":function updateErrorList(errorArray){
 	var table = document.getElementById("errortable"),
 	newbody = document.createElement('tbody'),
@@ -54,7 +59,9 @@ var glob = {
     },    
     //It's getting obvious that I need to define a proper error object.
     "sortErrorArray": function sortErrorArray(errorArray){
-	
+	return errorArray.sort(function(a,b){
+				   return a["start"] - b["start"];
+			       });
     }
     
 };
