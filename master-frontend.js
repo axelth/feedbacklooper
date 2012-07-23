@@ -28,8 +28,11 @@ var glob = {
 //replace the entire table with that.
 //in that case, I need to sort the errorArray based in index.
 //I also need to check for overlapping errors, which I can't handle yet
-"updateErrorList":function(){
-    
+"updateErrorList":function updateErrorList(){
+    var table = document.getElementById("errortable"),newRow,nr,string,type,action;
+    for (error in glob.errorarray) {
+	newRow = table.insertRow
+    }
 },
 //It's getting obvious that I need to define a proper error object.
 "sortErrorArray": function sortErrorArray(errorArray){
