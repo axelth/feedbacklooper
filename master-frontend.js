@@ -16,11 +16,10 @@ var glob = {
 	var text = submission.value;
 	var selStart = submission.selectionStart;
 	var selEnd = submission.selectionEnd;
-	window.alert([errorType,String(selStart), String(selEnd),
-		      text.substring(selStart,selEnd)].join(' '));
 	this.currentError = {'type':errorType,'start':selStart,
 			     'end':selEnd, 'string':text.substring(selStart,selEnd),
 			     'action':""};
+	this.updateCurrentErrorDisp(this.currentError);
     },
     //modifies errorArray and call updateErrorList on the new array.
     //The modification consists of pushing currentError and then sorting the
@@ -33,13 +32,35 @@ var glob = {
 	    return;
 	}
 	this.currentError.action = action;
-	window.alert("action: " + action + " added to error\n" + this.currentError.toString());
 	this.errorArray.push(this.currentError);
 	this.sortErrorArray(this.errorArray);
 	this.updateErrorList(this.errorArray);
 	this.currentError = null;
+	this.updateCurrentErrorDisp(this.currenError);
     },
-
+    //Update the currenterror display
+    "updateCurrentErrorDisp": function updateCurrentErrorDisp(currentError) {
+	var dispDiv,oldDisp,newDisp,errorArr;
+	dispDiv = document.getElementById("currenterror");
+	oldDisp = dispDiv.firstChild;
+	if (!currentError) {
+	    newDisp = document.createTextNode("none");
+	    dispDiv.style.backgroundColor = "lightgreen";
+	    }
+	else {
+	    errorArr = [(currentError['start'] || "-"),
+			(currentError['end'] || "-"),
+			(currentError['string'] || "-"),
+			(currentError['type'] || "-"),
+			(currentError['action'] || "-")];//build a data-array for createTblRow
+	    newDisp = document.createElement('table');
+	    newDisp.appendChild(document.createElement('tbody'));
+	    newDisp.firstChild.appendChild(this.createTblRow(['start','end','string','type','action']));
+	    newDisp.firstChild.appendChild(this.createTblRow(errorArr));
+	    dispDiv.style.backgroundColor = "crimson";
+	    }
+	dispDiv.replaceChild(newDisp,oldDisp);
+    },
     //Update the errorlist by constructing a new tbody from the errorArray.
     "updateErrorList":function updateErrorList(errorArray){
 	var table = document.getElementById("errortable"),
@@ -54,7 +75,7 @@ var glob = {
 	table.replaceChild(newbody,oldbody);
     },
     //take an array of data and return a row with one cell for each item
-    //plus a delete-button at the end of the row.
+    //if and index 'i' is given, add a delete-button at the end of the row.
     //TODO factor out the button creation code.
     "createTblRow": function createTblRow(data,i) {
 	var newrow = document.createElement('tr'),j,delBtn;
@@ -62,12 +83,36 @@ var glob = {
 	    newrow.insertCell(-1).appendChild(
 		document.createTextNode(data[j]));
 	}
-	delBtn = document.createElement('button');
-	delBtn.setAttribute('name',i);
-	delBtn.setAttribute('onclick',"glob.delError(this.name,glob.errorArray);");
-	delBtn.appendChild(document.createTextNode("delete"));
-	newrow.insertCell(-1).appendChild(delBtn);
+	if (i !== undefined) {
+	    delBtn = document.createElement('button');
+	    delBtn.setAttribute('name',i);
+	    delBtn.setAttribute('onclick',"glob.delError(this.name,glob.errorArray);");
+	    delBtn.appendChild(document.createTextNode("delete"));
+	    newrow.insertCell(-1).appendChild(delBtn);
+	}
 	return newrow;
+    },
+    "updateCorrectionForm": function updateCorrectionForm(errorArray){
+	var form = document.getElementById("correctionform"),e,p;
+	for (e = 0; e < errorArray.length; e += 1) {
+	    p = document.createElement('p');
+	    p.appendChild(document.createTextNode('Error ' + String(e + 1) + ":"));
+	    p.appendChild(this.createLabeledInput('Correction:', e, errorArray));
+	    p.appendChild(this.createLabeledInput('Comment:', e, errorArray));
+	    form.appendChild(p);
+	}
+    },
+    "createLabeledInput": function createLabeledInput(label, index, errorArray) {
+	var entry = document.createElement('label'),
+	element = label.slice(0,-1).toLowerCase();
+	entry.appendChild(document.createTextNode(label));
+	entry.appendChild(document.createElement('input'));
+	entry.lastChild.setAttribute('name', element + String(index));
+	entry.lastChild.setAttribute('type','text');
+	if (errorArray[index][element] !== undefined) {
+	    entry.lastChild.setAttribute('value', errorArray[index][element]);
+	}
+	return entry;
     },
     //Remove error at index from errorArray and updates the errorlist.
     "delError": function delError(index,errorArray) {
