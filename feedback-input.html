@@ -10,7 +10,10 @@
 	<textarea id="originaltext" readonly="readonly"></textarea>
       </div>
 
-      <div id="feedbackarea">Teachers corrections and comments</div>
+      <div id="feedbackarea">Teachers corrections and comments<br>
+	<form id="correctionform">
+	</form>
+      </div>
     </div>
     <div class="right">
       <div id="errortype">Type of error<br>
@@ -34,6 +37,9 @@
 	</table>
       </div>
       <div id="errorlist">
+	<div id="currenterror">
+	  Current error: none
+	</div>
 	<table id="errortable">
 	  <thead>
 	    <tr><th>Nr</th><th>String</th><th>Type</th><th>Action</th><th></th></tr>
