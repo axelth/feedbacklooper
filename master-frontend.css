@@ -1,5 +1,7 @@
 /*hej*/
-
+body {
+    font-size: 12px;
+}
 div {}
 .left {
     float:left;
