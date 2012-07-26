@@ -1,0 +1,7 @@
+<h1> Choose an assignment </h1>
+<ul>
+    <% @assignments.each do |a| %>
+    <li><%= "<a href=\"assignments/#{a.id}\">#{a.title}</a>" %></li>
+    <% end %>
+</ul>
+      

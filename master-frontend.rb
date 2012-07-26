@@ -1,33 +1,91 @@
 require 'erb'
 require 'sinatra/base'
-require 'datamapper'
+require 'data_mapper'
+require 'dm-sqlite-adapter'
+
+DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/db/database.db")
+
+class Teacher
+  include DataMapper::Resource
+  property :id, Serial
+  property :name, String, :required => true
+end
 
 class Student
   include DataMapper::Resource
   property :id, Serial
   property :name, String, :required => true
-  has n, :assignments
+
+  has n, :compositions
 end
+
 class Assignment
   include DataMapper::Resource
   property :id, Serial
+  property :title, String
+  property :active, Boolean
+
+  has n, :compositions
+end
+
+class Composition
+  include DataMapper::Resource
+  property :id, Serial
   property :content, Text, :required => true
+  property :created_at, DateTime
   
   belongs_to :student
+  belongs_to :assignment
   has n, :errortags
 end
+
 class Errortag
   include DataMapper::Resource
   property :id, Serial
-  property :ordering, Integer
   property :start, Integer
   property :end, Integer
-  property :string String
-  property :type String
-  property :action String
+  property :string, String
+  property :type, String
+  property :action, String
+  property :correction, String
+  property :comment, String
 
-  has one, :correction 
+  belongs_to :composition
 end
+
+class Response
+  include DataMapper::Resource
+  property :id, Serial
+  property :understanding, String, :required => true
+  property :comment, String
+
+  belongs_to :errortag
+end
+
+#For a start, let's let the feedback be part of the errortag object
+# class Feedback
+#   include DataMapper::Resource
+#   property :id, Serial
+#   property :correction, String
+#   property :comment, String
+#
+#   belongs_to :errortag
+# end
+
+DataMapper.finalize
+
 class MasterFrontend < Sinatra::Base
-
+  get '/assignments' do
+    @assignments = Assignment.all
+    erb :assignments
+  end
+  get '/assignments/:id' do
+    @assignment = Assignment.get(params[:id])
+    erb :show_assignment
+  end
+  get '/feedback' do
+    erb :feedback
+  end
+  run! if app_file == $0
 end
+
