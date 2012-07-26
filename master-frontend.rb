@@ -87,6 +87,12 @@ class MasterFrontend < Sinatra::Base
     @assignment = Assignment.get(params[:id])
     erb :show_assignment
   end
+  get 'compositions/new' do
+    #here I must add a reference to session user_id as well
+    @assignment = params[:assignment]
+    erb :new_composition
+  end
+  
   get '/feedback' do
     erb :feedback
   end
