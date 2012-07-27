@@ -1,11 +1,11 @@
 
     <div class="left">
       <div id="studenttext">Student's text<br>
-	<textarea id="originaltext" readonly="readonly" onMouseUp="glob.createErrorStub(this,glob.currentError);"></textarea>
+	<textarea id="originaltext" readonly="readonly" onMouseUp="glob.createErrorStub(this,glob.currentError);"><%= @composition.content %></textarea>
       </div>
 
       <div id="feedbackarea">Teachers corrections and comments<br>
-	<form id="correctionform">
+	<form id="correctionform" name="correctionform">
 	</form>
       </div>
     </div>

@@ -79,6 +79,9 @@ end
 DataMapper.finalize
 
 class MasterFrontend < Sinatra::Base
+  before do
+    @data = request.body.read
+  end
   get '/assignments' do
     @assignments = Assignment.all
     erb :assignments
@@ -87,14 +90,27 @@ class MasterFrontend < Sinatra::Base
     @assignment = Assignment.get(params[:id])
     erb :show_assignment
   end
-  get 'compositions/new' do
+  get '/compositions/new' do
     #here I must add a reference to session user_id as well
     @assignment = params[:assignment]
     erb :new_composition
   end
-  
-  get '/feedback' do
+  post '/compositions/new' do
+    @assignment = params[:assignment_id]
+    @content = params[:maintext]
+    @student = Student.first(name: params[:student_name]).id
+    Composition.create(content: @content, student_id: @student, assignment_id: @assignment)
+    redirect '/assignments'
+  end
+  get '/feedback/:id' do
+    @composition = Composition.get(params[:id])
     erb :feedback
+  end
+  post '/feedback/:id' do
+    params
+  end
+  get '/showparam' do
+    params[:query]
   end
   run! if app_file == $0
 end

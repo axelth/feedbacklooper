@@ -116,11 +116,18 @@ var glob = {
 	newForm = document.createElement('form'),
 	e,p;
 	newForm.setAttribute('id', 'correctionform');
+	newForm.setAttribute('name', 'correctionform');
+	newForm.setAttribute('action', '/feedback/' + this.compositionId);
+	newForm.setAttribute('method', 'post');
 	for (e = 0; e < errorArray.length; e += 1) {
 	    p = document.createElement('p');
 	    p.appendChild(document.createTextNode('Error ' + String(e + 1) + ":"));
 	    p.appendChild(this.createLabeledInput('Correction:', e, errorArray));
 	    p.appendChild(this.createLabeledInput('Comment:', e, errorArray));
+	    p.appendChild(this.createHidden('start',e,errorArray));
+	    p.appendChild(this.createHidden('end',e,errorArray));
+	    p.appendChild(this.createHidden('type',e,errorArray));
+	    p.appendChild(this.createHidden('action',e,errorArray));
 	    newForm.appendChild(p);
 	}
 	document.getElementById("feedbackarea").replaceChild(newForm, form);
@@ -131,7 +138,7 @@ var glob = {
 	element = label.slice(0,-1).toLowerCase();
 	entry.appendChild(document.createTextNode(label));
 	entry.appendChild(document.createElement('input'));
-	entry.lastChild.setAttribute('name', element + String(index));
+	entry.lastChild.setAttribute('name', String(index) + '[' + element + ']');
 	entry.lastChild.setAttribute('type','text');
 	entry.lastChild.setAttribute('onKeyUp',"glob.saveInput(this);");
 	if (errorArray[index][element] !== undefined) {
@@ -139,10 +146,18 @@ var glob = {
 	}
 	return entry;
     },
+    "createHidden": function createHidden(label,index,errorArray) {
+	var element = document.createElement('input');
+	element.setAttribute('name', String(index) + '[' + label + ']');
+	element.setAttribute('type', 'hidden');
+	element.setAttribute('value', errorArray[index][label]);
+	return element;
+    },
     //Continually save corrections and comments to the corresponding error in errorArray
     "saveInput": function saveInput(input) {
-	var attribute = input.name.slice(0,-1),
-	index = input.name.slice(-1);
+	var name = input.name,
+	attribute = name.slice(name.indexOf('[') + 1,name.indexOf(']')),
+	index = input.name.slice(0,name.indexOf('['));
 	this.errorArray[index][attribute] = input.value;
     },
     //Remove error at index from errorArray and updates the errorlist.
@@ -157,6 +172,17 @@ var glob = {
 	return errorArray.sort(function(a,b){
 				   return a["start"] - b["start"];
 			       });
-    }
+    },
+    //called in onload in layout.erb
+    "setCompositionId": function setCompositionId(id) {
+	this.compositionId = id;
+    },
+    
+    "postErrorArray": function postErrorArray(errorArray) {
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.open("POST", "/feedback/" + this.compositionId);
+	xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+	xmlhttp.send(JSON.stringify(errorArray));
+	}
     
 };
