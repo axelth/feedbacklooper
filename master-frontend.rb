@@ -79,8 +79,18 @@ end
 DataMapper.finalize
 
 class MasterFrontend < Sinatra::Base
-  before do
-    @data = request.body.read
+  helpers do
+    def highlight_error(text, offsets)
+      modifier = 0
+      content = text.gsub("\r\n","\n")
+      offsets.each do |o|
+        content.insert(o[0] + modifier, '<span class="error">')
+        modifier += 20
+        content.insert(o[1] + modifier, '</span>')
+        modifier += 7
+      end
+      return content.gsub("\n","<br>")
+    end
   end
   get '/assignments' do
     @assignments = Assignment.all
@@ -107,7 +117,18 @@ class MasterFrontend < Sinatra::Base
     erb :feedback
   end
   post '/feedback/:id' do
-    params
+    @composition = params[:id]
+    @errors = Hash[params.find_all {|k,v| k =~ /^[0-9]+$/ }].each {|k,v|
+      v[:composition_id] = @composition}
+    @errors.each {|k,v| Errortag.create(v)}
+    '<h1>Registered!</h1>'
+  end
+  get '/respond/:id' do
+    @composition = Composition.get(params[:id])
+    @errors = Errortag.all(composition_id: params[:id])
+    @offsets = @errors.collect {|e| [e.start,e.end]}
+    @composition.content = highlight_error(@composition.content, @offsets)
+    erb :respond
   end
   get '/showparam' do
     params[:query]

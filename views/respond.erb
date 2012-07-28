@@ -1,0 +1,16 @@
+<div class='errors'>
+<table id="errortable">
+  <form>
+  <tbody>
+    <% @errors.each do |e| %>
+      <tr><td>Correction: </td><td><%= e.correction %></td><td>Comment: </td><td><%= e.comment %></td></tr>
+      <tr><td>Understanding</td><td><input type="select" name="<%="#{e.id}[understanding]"%>"></td><td>Response: </td><td><input type="text" name="<%="#{e.id}[response]"%>"></td></tr>
+      <%end%>
+  </tbody>
+</table>
+<form>
+</div>
+
+<div class='text'>
+  <p id="originaltext"><%= @composition.content %><p>
+</div>

@@ -60,3 +60,6 @@ div {}
 .right #registerfeedback {
 
 }
+.error {
+    background-color: lightgrey;
+}
