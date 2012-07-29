@@ -12,7 +12,7 @@
     </tbody>
   </table>
   <table id="feedbacktable">
-  <form>
+  <form id="feedbackform" action="/respond" method="post">
   <tbody>
     <% @errors.each do |e| %>
       <tr><td>Correction: </td><td><%= e.correction %></td></tr>

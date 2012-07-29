@@ -130,6 +130,11 @@ class MasterFrontend < Sinatra::Base
     @composition.content = highlight_error(@composition.content, @offsets)
     erb :respond
   end
+  post '/respond' do
+    @responses = Hash[params.find_all {|k,v| k =~ /^[0-9]+$/ }].each {|k,v| v[errortag_id] = k }
+    @responses.each {|k,v| Response.create(v) }
+    '<h1>Responses registered!</h1>'
+  end
   get '/showparam' do
     params[:query]
   end
