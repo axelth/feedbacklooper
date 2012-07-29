@@ -1,5 +1,16 @@
 <div class='errors'>
-  
+  <table id="errortable">
+    <thead>
+      <tr><th>Nr</th><th>String</th><th>Type</th><th>Action</th><th></th></tr>
+    </thead>
+    <tbody>
+      <% @errors.each_with_index do |e,i|%>
+	<tr>
+	  <td><%=(i + 1).to_s%></td><td><%='string'%></td><td><%=e.type%></td><td><%=e.action%></td>
+	</tr>
+      <% end %>
+    </tbody>
+  </table>
   <table id="feedbacktable">
   <form>
   <tbody>
