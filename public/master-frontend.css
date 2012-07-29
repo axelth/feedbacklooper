@@ -63,3 +63,9 @@ div {}
 .error {
     background-color: lightgrey;
 }
+.errors {
+    float: left;
+}
+.text {
+    float: right;
+}

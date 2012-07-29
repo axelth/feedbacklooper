@@ -1,10 +1,19 @@
 <div class='errors'>
-<table id="errortable">
+  
+  <table id="feedbacktable">
   <form>
   <tbody>
     <% @errors.each do |e| %>
-      <tr><td>Correction: </td><td><%= e.correction %></td><td>Comment: </td><td><%= e.comment %></td></tr>
-      <tr><td>Understanding</td><td><input type="select" name="<%="#{e.id}[understanding]"%>"></td><td>Response: </td><td><input type="text" name="<%="#{e.id}[response]"%>"></td></tr>
+      <tr><td>Correction: </td><td><%= e.correction %></td></tr>
+      <tr><td>Comment: </td><td><%= e.comment %></td></tr>
+      <tr><td>Understanding</td><td><select name="<%="#{e.id}[understanding]"%>">
+	    <option value="0" label="disagree">I understand but disagree</option>
+	    <option value="1" label="don't understand">Don't understand</option>
+	    <option value="2" label="think I understand">Think I understand</option>
+	    <option value="3" label="understand &amp; agree">I understand and agree</option>
+
+	  </select></td></tr>
+      <tr><td>Response: </td><td><input type="text" name="<%="#{e.id}[response]"%>"></td></tr>
       <%end%>
   </tbody>
 </table>
