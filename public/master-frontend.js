@@ -128,6 +128,7 @@ var glob = {
 	    p.appendChild(this.createHidden('end',e,errorArray));
 	    p.appendChild(this.createHidden('type',e,errorArray));
 	    p.appendChild(this.createHidden('action',e,errorArray));
+	    p.appendChild(this.createHidden('string',e,errorArray));
 	    newForm.appendChild(p);
 	}
 	document.getElementById("feedbackarea").replaceChild(newForm, form);
