@@ -80,6 +80,9 @@ DataMapper.finalize
 
 class MasterFrontend < Sinatra::Base
   helpers do
+    # Wrap text included in an errortag in a span tag.
+    # the modifier variable keeps count of how many characters of markup has
+    # been added to the original string.
     def highlight_error(text, offsets)
       modifier = 0
       content = text.gsub("\r\n","\n")
