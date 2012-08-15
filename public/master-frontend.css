@@ -14,7 +14,7 @@ div {}
 }
 .left {
     float:left;
-    width:510;
+    width:510px;
 }
 .left  #studenttext {
     height: 300px;
@@ -36,7 +36,7 @@ div {}
 }
 .right {
     float: right;
-    width: 220;
+    width: 220px;
 }
 
 .right #errortype {
