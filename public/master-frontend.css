@@ -1,6 +1,7 @@
 /*hej*/
 body {
     font-size: 12px;
+    width: 750px;
 }
 div {}
 
@@ -15,6 +16,7 @@ div {}
 .left {
     float:left;
     width:510px;
+    border-right: 1px solid grey;
 }
 .left  #studenttext {
     height: 300px;

@@ -21,6 +21,8 @@ class Student
   property :name, String, :required => true
 
   has n, :compositions
+  has n, :errortags, :through => :compositions
+  has n, :responses, :through => :errortags
 end
 
 class Assignment
@@ -53,17 +55,21 @@ class Errortag
   property :action, String
   property :correction, String
   property :comment, String
-
+  
   belongs_to :composition
+  belongs_to :student
+  has n, :responses
 end
 
 class Response
   include DataMapper::Resource
   property :id, Serial
   property :understanding, String, :required => true
+  # I must change the name of this property to "response" here and in the view
   property :comment, String
 
   belongs_to :errortag
+  belongs_to :student
 end
 
 #For a start, let's let the feedback be part of the errortag object
@@ -95,12 +101,30 @@ class MasterFrontend < Sinatra::Base
       return content.gsub("\n","<br>")
     end
   end
+  # configuration
+  set :sessions, true
+  
+  get '/login' do
+    erb :login
+  end
+  get '/login/submit' do
+    if params[:usertype] == 'Teacher'
+      session[:usertype] = 'Teacher'
+      redirect to '/assignments'
+    elsif Student.first(name: params[:username])
+      session[:usertype] = "Student"
+      session[:student_id] = Student.first(name: params[:username]).id
+      redirect to '/assignments'
+    else
+      redirect to '/login'
+    end
+  end
   get '/assignments' do
     @assignments = Assignment.all
     erb :assignments
   end
-  get '/assignments/:id' do
-    @assignment = Assignment.get(params[:id])
+  get '/assignments/:title' do
+    @assignments = Assignment.all(params[:title])
     erb :show_assignment
   end
   get '/compositions/new' do
@@ -115,15 +139,28 @@ class MasterFrontend < Sinatra::Base
     Composition.create(content: @content, student_id: @student, assignment_id: @assignment)
     redirect '/assignments'
   end
+  get '/compositions' do
+    if session[:usertype] == "Teacher"
+      @compositions = Composition.all(:errortags => nil)
+    else
+      @compositions = Composition.all(:student_id => session[:student_id])
+    end
+    erb :compositions
+  end
   get '/feedback/:id' do
     @composition = Composition.get(params[:id])
     erb :feedback
   end
   post '/feedback/:id' do
-    @composition = params[:id]
-    @errors = Hash[params.find_all {|k,v| k =~ /^[0-9]+$/ }].each {|k,v|
-      v[:composition_id] = @composition}
-    @errors.each {|k,v| Errortag.create(v)}
+    @composition = Composition.get(params[:id])
+    @student = Student.get(@composition.student_id)
+    @errors = Hash[params.find_all {|k,v| k =~ /^[0-9]+$/ }]
+    @errors.each do |k,v|
+      e = Errortag.new(v)
+      e.composition = @composition
+      e.student = @student
+      e.save
+    end
     '<h1>Registered!</h1>'
   end
   get '/respond/:id' do
@@ -134,12 +171,17 @@ class MasterFrontend < Sinatra::Base
     erb :respond
   end
   post '/respond' do
-    @responses = Hash[params.find_all {|k,v| k =~ /^[0-9]+$/ }].each {|k,v| v[errortag_id] = k }
-    @responses.each {|k,v| Response.create(v) }
+    @responses = Hash[params.find_all {|k,v| k =~ /^[0-9]+$/ }]
+    @responses.each do |k,v|
+      r = Response.new(v)
+      r.errortag = Errortag.get(k)
+      r.student = r.errortag.student
+      r.save
+    end
     '<h1>Responses registered!</h1>'
   end
   get '/showparam' do
-    params[:query]
+    params
   end
   run! if app_file == $0
 end

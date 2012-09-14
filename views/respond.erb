@@ -1,4 +1,4 @@
-<div class='errors'>
+<div class='right'>
   <table id="errortable">
     <thead>
       <tr><th>Nr</th><th>String</th><th>Type</th><th>Action</th><th></th></tr>
@@ -6,7 +6,7 @@
     <tbody>
       <% @errors.each_with_index do |e,i|%>
 	<tr>
-	  <td><%=(i + 1).to_s%></td><td><%='string'%></td><td><%=e.type%></td><td><%=e.action%></td>
+	  <td><%=(i + 1).to_s%></td><td><%="#{e.string}"%></td><td><%=e.type%></td><td><%=e.action%></td>
 	</tr>
       <% end %>
     </tbody>
@@ -24,13 +24,14 @@
 	    <option value="3" label="understand &amp; agree">I understand and agree</option>
 
 	  </select></td></tr>
-      <tr><td>Response: </td><td><input type="text" name="<%="#{e.id}[response]"%>"></td></tr>
+      <tr><td>Response: </td><td><input type="text" name="<%="#{e.id}[comment]"%>"></td></tr>
       <%end%>
   </tbody>
 </table>
-<form>
+<input type="submit" value="register response">
+  <form>
 </div>
 
-<div class='text'>
+<div class='left'>
   <p id="originaltext"><%= @composition.content %><p>
 </div>
