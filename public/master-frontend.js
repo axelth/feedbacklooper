@@ -136,7 +136,9 @@ var glob = {
     //Create form fields for corrections and comments
     "createLabeledInput": function createLabeledInput(label, index, errorArray) {
 	var entry = document.createElement('label'),
-	element = label.slice(0,-1).toLowerCase();
+	re = /[0-9]/,
+	// use re to get the name of the label without the number
+	element = label.slice(0,label.search(re)).toLowerCase();
 	entry.appendChild(document.createTextNode(label));
 	entry.appendChild(document.createElement('input'));
 	entry.lastChild.setAttribute('name', String(index) + '[' + element + ']');
