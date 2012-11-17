@@ -136,7 +136,7 @@ class MasterFrontend < Sinatra::Base
   get '/login/submit' do
     if params[:usertype] == 'Teacher'
       session[:usertype] = 'Teacher'
-      redirect to '/assignments'
+      redirect to '/teacher/dashboard'
     elsif Student.first(name: params[:username])
       session[:usertype] = "Student"
       session[:student_id] = Student.first(name: params[:username]).id
@@ -146,8 +146,29 @@ class MasterFrontend < Sinatra::Base
     end
   end
   get '/teacher/dashboard/?' do
-
+    @assignments = Assignment.all.collect do |a|
+      [a, Composition.all(assignment: a).length]
+    end
+    @compositions = Composition.all(errortags: nil,limit:10)
+    erb :t_dashboard
   end
+  get '/teacher/feedback/:id' do
+    @composition = Composition.get(params[:id])
+    erb :feedback
+  end
+  post '/teacher/feedback/:id' do
+    @composition = Composition.get(params[:id])
+    @student = Student.get(@composition.student_id)
+    @errors = Hash[params.find_all {|k,v| k =~ /^[0-9]+$/ }]
+    @errors.each do |k,v|
+      e = Errortag.new(v)
+      e.composition = @composition
+      e.student = @student
+      e.save
+    end
+    redirect to '/teacher/dashboard'
+  end
+
   get '/assignments' do
     @assignments = Assignment.all
     erb :assignments
@@ -176,22 +197,7 @@ class MasterFrontend < Sinatra::Base
     end
     erb :compositions
   end
-  get '/feedback/:id' do
-    @composition = Composition.get(params[:id])
-    erb :feedback
-  end
-  post '/feedback/:id' do
-    @composition = Composition.get(params[:id])
-    @student = Student.get(@composition.student_id)
-    @errors = Hash[params.find_all {|k,v| k =~ /^[0-9]+$/ }]
-    @errors.each do |k,v|
-      e = Errortag.new(v)
-      e.composition = @composition
-      e.student = @student
-      e.save
-    end
-    '<h1>Registered!</h1>'
-  end
+
   get '/respond/:id' do
     @composition = Composition.get(params[:id])
     @errors = Errortag.all(composition_id: params[:id])
