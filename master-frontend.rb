@@ -4,6 +4,7 @@ if RUBY_PLATFORM == 'java'
 end
 require 'erb'
 require 'sinatra/base'
+require 'sinatra/partial'
 require 'data_mapper'
 require 'dm-sqlite-adapter'
 
@@ -118,6 +119,8 @@ class MasterFrontend < Sinatra::Base
     end
   end
   # configuration
+  register Sinatra::Partial
+  set :partial_template_engine, :erb
   set :sessions, true
   
   # before filters
@@ -141,6 +144,9 @@ class MasterFrontend < Sinatra::Base
     else
       redirect to '/login'
     end
+  end
+  get '/teacher/dashboard/?' do
+
   end
   get '/assignments' do
     @assignments = Assignment.all
