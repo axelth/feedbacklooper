@@ -100,10 +100,33 @@ class MasterFrontend < Sinatra::Base
       end
       return content.gsub("\n","<br>")
     end
+    def confirm_or_redirect_user_type(user_type)
+      unless session[:usertype] == user_type
+        if session[:usertype].nil?
+          redirect to '/login'
+        else
+          @user_type = user_type
+          @redirect_url = if user_type == 'Teacher'
+                            '/student/dashboard'
+                          else
+                            '/teacher/dashboard'
+                          end
+          erb :wronguser
+          halt
+        end
+      end  
+    end
   end
   # configuration
   set :sessions, true
   
+  # before filters
+  before '/teacher/*' do
+    confirm_or_redirect_user_type('Teacher')
+  end
+  before '/student/*' do
+    confirm_or_redirect_user_type('Student')
+  end
   get '/login' do
     erb :login
   end
