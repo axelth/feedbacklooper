@@ -156,6 +156,11 @@ class MasterFrontend < Sinatra::Base
     @responses = Response.all(limit: 10)
     erb :t_dashboard
   end
+  get '/teacher/assignments/:id' do
+    @assignment = Assignment.get(params[:id])
+    @compositions = Composition.all(:assignment => @assignment)
+    erb :show_assignment
+  end
   get '/teacher/feedback/:id' do
     @composition = Composition.get(params[:id])
     erb :feedback
