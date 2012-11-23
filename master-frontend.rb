@@ -146,10 +146,14 @@ class MasterFrontend < Sinatra::Base
     end
   end
   get '/teacher/dashboard/?' do
+
     @assignments = Assignment.all.collect do |a|
       [a, Composition.all(assignment: a).length]
     end
-    @compositions = Composition.all(errortags: nil,limit:10)
+
+    @compositions = Composition.all(errortags: nil,limit: 10)
+    
+    @responses = Response.all(limit: 10)
     erb :t_dashboard
   end
   get '/teacher/feedback/:id' do

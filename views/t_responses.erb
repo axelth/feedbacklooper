@@ -1,0 +1,7 @@
+<h2>未読のフィードバック回答</h2>
+<ul>
+  <% responses.each do |r| %>
+   <li> <%=sprintf("学習者：%s，エラー：%s，訂正：%s，理解度：%d，コメント：%s",
+	       r.student_id,r.errortag.string,r.errortag.correction,r.understanding,r.comment)%></li>
+  <% end %>
+</ul>
