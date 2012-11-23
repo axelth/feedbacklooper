@@ -163,7 +163,7 @@ class MasterFrontend < Sinatra::Base
   end
   get '/teacher/feedback/:id' do
     @composition = Composition.get(params[:id])
-    erb :feedback
+    erb :t_feedback
   end
   post '/teacher/feedback/:id' do
     @composition = Composition.get(params[:id])
