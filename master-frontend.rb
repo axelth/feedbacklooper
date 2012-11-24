@@ -165,6 +165,9 @@ class MasterFrontend < Sinatra::Base
     @composition = Composition.get(params[:id])
     erb :t_feedback
   end
+  # This path is used in both t_feedback.erb and
+  # master-frontend.js; in the correctionform
+  # building code. This clumsy code needs to be changed.
   post '/teacher/feedback/:id' do
     @composition = Composition.get(params[:id])
     @student = Student.get(@composition.student_id)
