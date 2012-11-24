@@ -1,0 +1,5 @@
+<ul>
+<% compositions.each do |c| %>
+  <li>課題<%=c.assignment.title%>の<a href="/student/composition/<%=c.id%>">作文を表示<a></li>
+  <% end %>
+</ul>
