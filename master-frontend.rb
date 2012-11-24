@@ -140,7 +140,7 @@ class MasterFrontend < Sinatra::Base
     elsif Student.first(name: params[:username])
       session[:usertype] = "Student"
       session[:student_id] = Student.first(name: params[:username]).id
-      redirect to '/assignments'
+      redirect to '/student/dashboard'
     else
       redirect to '/login'
     end
@@ -180,7 +180,13 @@ class MasterFrontend < Sinatra::Base
     end
     redirect to '/teacher/dashboard'
   end
-
+  get '/student/dashboard/?' do
+    @student = Student.get(session[:student_id])
+    @assignments = Assignment.all- @student.compositions.assignments
+    @feedback = @student.errortags - @student.responses.errortags
+    @compositions = @student.compositions
+    erb :s_dashboard
+  end
   get '/assignments' do
     @assignments = Assignment.all
     erb :assignments

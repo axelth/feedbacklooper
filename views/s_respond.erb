@@ -1,0 +1,12 @@
+<ul>
+<% compositions.each do |c| %>
+  <% errors = feedback.select {|e| e.composition == c} %>
+  <% if errors && errors.length > 0 %>
+    <li><%=c.assignment.id%>：<a href="/student/respond/<%=c.id%>">フィードバックに答える</a></li>
+    <ul>
+      <% errors.each do |e| %>
+	<li><%= e.string %>,<%= e.correction %></li>
+      <% end %>
+    </ul>
+  <% end %>
+<% end %>
