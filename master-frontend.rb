@@ -210,6 +210,16 @@ class MasterFrontend < Sinatra::Base
     @composition.content = highlight_error(@composition.content, @offsets)
     erb :s_respond
   end
+  post '/student/respond' do
+    @responses = Hash[params.find_all {|k,v| k =~ /^[0-9]+$/ }]
+    @responses.each do |k,v|
+      r = Response.new(v)
+      r.errortag = Errortag.get(k)
+      r.student = r.errortag.student
+      r.save
+    end
+    '<h1>Responses registered!</h1>'
+  end
   get '/assignments' do
     @assignments = Assignment.all
     erb :assignments
@@ -246,16 +256,7 @@ class MasterFrontend < Sinatra::Base
     @composition.content = highlight_error(@composition.content, @offsets)
     erb :respond
   end
-  post '/respond' do
-    @responses = Hash[params.find_all {|k,v| k =~ /^[0-9]+$/ }]
-    @responses.each do |k,v|
-      r = Response.new(v)
-      r.errortag = Errortag.get(k)
-      r.student = r.errortag.student
-      r.save
-    end
-    '<h1>Responses registered!</h1>'
-  end
+
   get '/showparam' do
     params
   end
