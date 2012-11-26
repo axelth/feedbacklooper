@@ -1,5 +1,13 @@
 <ul>
 <% compositions.each do |c| %>
-  <li>課題<%=c.assignment.title%>の<a href="/student/composition/<%=c.id%>">作文を表示<a></li>
+  <li>課題<%=c.assignment.title%>の<a href="/student/respond/<%=c.id%>">作文を表示<a></li>
+    <% errors = feedback.select {|e| e.composition == c} %>
+  <% if errors && errors.length > 0 %>
+    <ul>
+      <% errors.each do |e| %>
+	<li><%= e.string %>,<%= e.correction %></li>
+      <% end %>
+    </ul>
   <% end %>
+<% end %>
 </ul>

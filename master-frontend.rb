@@ -1,3 +1,4 @@
+# encoding: UTF-8
 if RUBY_PLATFORM == 'java'
   require 'java'
   require 'lib/sqlite-jdbc-3.5.9.jar'
@@ -139,6 +140,7 @@ class MasterFrontend < Sinatra::Base
       redirect to '/teacher/dashboard'
     elsif Student.first(name: params[:username])
       session[:usertype] = "Student"
+      session[:studentname] = params[:username]
       session[:student_id] = Student.first(name: params[:username]).id
       redirect to '/student/dashboard'
     else
@@ -183,17 +185,30 @@ class MasterFrontend < Sinatra::Base
   get '/student/dashboard/?' do
     @student = Student.get(session[:student_id])
     @assignments = Assignment.all- @student.compositions.assignments
-    @feedback = @student.errortags - @student.responses.errortags
+    @feedback = @student.errortags
     @compositions = @student.compositions
     erb :s_dashboard
   end
   get '/student/compositions/new/:id' do
     @assignment = params[:id]
     erb :s_new_composition
-    
+  end
+  post '/student/compositions/new' do
+    @assignment = params[:assignment_id]
+    @content = params[:maintext]
+    @student = Student.first(name: params[:student_name]).id
+    Composition.create(content: @content, student_id: @student, assignment_id: @assignment)
+    redirect '/student/dashboard'
   end
   get '/student/composition/:id' do
-    "作文を表示するページ"
+    return "作文を表示するページ"
+  end
+  get '/student/respond/:id' do
+    @composition = Composition.get(params[:id])
+    @errors = Errortag.all(composition_id: params[:id])
+    @offsets = @errors.collect {|e| [e.start,e.end]}
+    @composition.content = highlight_error(@composition.content, @offsets)
+    erb :s_respond
   end
   get '/assignments' do
     @assignments = Assignment.all
