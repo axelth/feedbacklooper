@@ -187,6 +187,14 @@ class MasterFrontend < Sinatra::Base
     @compositions = @student.compositions
     erb :s_dashboard
   end
+  get '/student/compositions/new/:id' do
+    @assignment = params[:id]
+    erb :s_new_composition
+    
+  end
+  get '/student/composition/:id' do
+    "作文を表示するページ"
+  end
   get '/assignments' do
     @assignments = Assignment.all
     erb :assignments
