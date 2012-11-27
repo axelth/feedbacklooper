@@ -148,13 +148,10 @@ class MasterFrontend < Sinatra::Base
     end
   end
   get '/teacher/dashboard/?' do
-
     @assignments = Assignment.all.collect do |a|
       [a, Composition.all(assignment: a).length]
     end
-
     @compositions = Composition.all(errortags: nil,limit: 10)
-    
     @responses = Response.all(limit: 10)
     erb :t_dashboard
   end
@@ -198,8 +195,10 @@ class MasterFrontend < Sinatra::Base
     @content = params[:maintext]
     @student = Student.first(name: params[:student_name]).id
     Composition.create(content: @content, student_id: @student, assignment_id: @assignment)
-    redirect '/student/dashboard'
+    redirect to '/student/dashboard'
   end
+# rewrite s_respond to be a partial that give only the responeses
+# draw them together with the composition if there is feedback to respond to
   get '/student/composition/:id' do
     return "作文を表示するページ"
   end
@@ -218,45 +217,9 @@ class MasterFrontend < Sinatra::Base
       r.student = r.errortag.student
       r.save
     end
-    '<h1>Responses registered!</h1>'
+    redirect to '/student/dashboard'
   end
-  get '/assignments' do
-    @assignments = Assignment.all
-    erb :assignments
-  end
-  get '/assignments/:title' do
-    @assignments = Assignment.all(params[:title])
-    erb :show_assignment
-  end
-  get '/compositions/new' do
-    #here I must add a reference to session user_id as well
-    @assignment = params[:assignment]
-    erb :new_composition
-  end
-  post '/compositions/new' do
-    @assignment = params[:assignment_id]
-    @content = params[:maintext]
-    @student = Student.first(name: params[:student_name]).id
-    Composition.create(content: @content, student_id: @student, assignment_id: @assignment)
-    redirect '/assignments'
-  end
-  get '/compositions' do
-    if session[:usertype] == "Teacher"
-      @compositions = Composition.all(:errortags => nil)
-    else
-      @compositions = Composition.all(:student_id => session[:student_id])
-    end
-    erb :compositions
-  end
-
-  get '/respond/:id' do
-    @composition = Composition.get(params[:id])
-    @errors = Errortag.all(composition_id: params[:id])
-    @offsets = @errors.collect {|e| [e.start,e.end]}
-    @composition.content = highlight_error(@composition.content, @offsets)
-    erb :respond
-  end
-
+ 
   get '/showparam' do
     params
   end
