@@ -155,10 +155,19 @@ class MasterFrontend < Sinatra::Base
     @responses = Response.all(limit: 10)
     erb :t_dashboard
   end
+
+  get '/teacher/assignments/new' do
+    erb :t_new_assignment
+  end
   get '/teacher/assignments/:id' do
     @assignment = Assignment.get(params[:id])
     @compositions = Composition.all(:assignment => @assignment)
     erb :show_assignment
+  end
+  post '/teacher/assignment' do
+    "#{params[:title]}, #{params[:description]}"
+    #Assignment.create(title: params[:title])
+    #redirect to '/teacher/dashboard'
   end
   get '/teacher/feedback/:id' do
     @composition = Composition.get(params[:id])
@@ -197,7 +206,7 @@ class MasterFrontend < Sinatra::Base
     Composition.create(content: @content, student_id: @student, assignment_id: @assignment)
     redirect to '/student/dashboard'
   end
-# rewrite s_respond to be a partial that give only the responeses
+# rewrite s_respond to be a partial that give only the response form
 # draw them together with the composition if there is feedback to respond to
   get '/student/composition/:id' do
     return "作文を表示するページ"
