@@ -165,9 +165,8 @@ class MasterFrontend < Sinatra::Base
     erb :show_assignment
   end
   post '/teacher/assignment' do
-    "#{params[:title]}, #{params[:description]}"
-    #Assignment.create(title: params[:title])
-    #redirect to '/teacher/dashboard'
+    Assignment.create(title: params[:title],active: nil)
+    redirect to '/teacher/dashboard'
   end
   get '/teacher/feedback/:id' do
     @composition = Composition.get(params[:id])
