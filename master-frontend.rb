@@ -31,7 +31,7 @@ class Assignment
   include DataMapper::Resource
   property :id, Serial
   property :title, String
-  property :active, Boolean
+  property :deadline, Boolean
 
   has n, :compositions
 end
