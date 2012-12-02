@@ -1,0 +1,7 @@
+<h2>課題</h2>
+<ul>
+<% assignments.each do |a| %>
+  <%# The elements of assignments are [assignment,nr_of_compositions] %>
+  <li><%=a[0].title%>: 提出済み作文　<%=a[1]%>, <a href="/teacher/assignments/<%=a[0].id%>">表示</a></li>
+<% end %>
+</ul>

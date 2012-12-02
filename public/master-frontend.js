@@ -117,7 +117,7 @@ var glob = {
 	e,p;
 	newForm.setAttribute('id', 'correctionform');
 	newForm.setAttribute('name', 'correctionform');
-	newForm.setAttribute('action', '/feedback/' + this.compositionId);
+	newForm.setAttribute('action', '/teacher/feedback/' + this.compositionId);
 	newForm.setAttribute('method', 'post');
 	for (e = 0; e < errorArray.length; e += 1) {
 	    p = document.createElement('p');

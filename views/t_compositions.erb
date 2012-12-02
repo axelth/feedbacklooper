@@ -1,0 +1,7 @@
+<h2>添削されていない作文</h2>
+<ul>
+<% compositions.each do |c| %>
+  <li>課題：<%=c.assignment.id%>, 作者: <%=c.student.id%> 
+    <a href="/teacher/feedback/<%=c.id%>">添削する</a></li>
+<% end %>
+</ul>

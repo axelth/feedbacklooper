@@ -1,9 +1,11 @@
+# encoding: UTF-8
 if RUBY_PLATFORM == 'java'
   require 'java'
   require 'lib/sqlite-jdbc-3.5.9.jar'
 end
 require 'erb'
 require 'sinatra/base'
+require 'sinatra/partial'
 require 'data_mapper'
 require 'dm-sqlite-adapter'
 
@@ -100,58 +102,80 @@ class MasterFrontend < Sinatra::Base
       end
       return content.gsub("\n","<br>")
     end
+    def confirm_or_redirect_user_type(user_type)
+      unless session[:usertype] == user_type
+        if session[:usertype].nil?
+          redirect to '/login'
+        else
+          @user_type = user_type
+          @redirect_url = if user_type == 'Teacher'
+                            '/student/dashboard'
+                          else
+                            '/teacher/dashboard'
+                          end
+          erb :wronguser
+          halt
+        end
+      end  
+    end
   end
   # configuration
+  register Sinatra::Partial
+  set :partial_template_engine, :erb
   set :sessions, true
   
+  # before filters
+  before '/teacher/*' do
+    confirm_or_redirect_user_type('Teacher')
+  end
+  before '/student/*' do
+    confirm_or_redirect_user_type('Student')
+  end
   get '/login' do
     erb :login
   end
   get '/login/submit' do
     if params[:usertype] == 'Teacher'
       session[:usertype] = 'Teacher'
-      redirect to '/assignments'
+      redirect to '/teacher/dashboard'
     elsif Student.first(name: params[:username])
       session[:usertype] = "Student"
+      session[:studentname] = params[:username]
       session[:student_id] = Student.first(name: params[:username]).id
-      redirect to '/assignments'
+      redirect to '/student/dashboard'
     else
       redirect to '/login'
     end
   end
-  get '/assignments' do
-    @assignments = Assignment.all
-    erb :assignments
+  get '/teacher/dashboard/?' do
+    @assignments = Assignment.all.collect do |a|
+      [a, Composition.all(assignment: a).length]
+    end
+    @compositions = Composition.all(errortags: nil,limit: 10)
+    @responses = Response.all(limit: 10)
+    erb :t_dashboard
   end
-  get '/assignments/:title' do
-    @assignments = Assignment.all(params[:title])
+
+  get '/teacher/assignments/new' do
+    erb :t_new_assignment
+  end
+  get '/teacher/assignments/:id' do
+    @assignment = Assignment.get(params[:id])
+    @compositions = Composition.all(:assignment => @assignment)
     erb :show_assignment
   end
-  get '/compositions/new' do
-    #here I must add a reference to session user_id as well
-    @assignment = params[:assignment]
-    erb :new_composition
+  post '/teacher/assignment' do
+    Assignment.create(title: params[:title],active: nil)
+    redirect to '/teacher/dashboard'
   end
-  post '/compositions/new' do
-    @assignment = params[:assignment_id]
-    @content = params[:maintext]
-    @student = Student.first(name: params[:student_name]).id
-    Composition.create(content: @content, student_id: @student, assignment_id: @assignment)
-    redirect '/assignments'
-  end
-  get '/compositions' do
-    if session[:usertype] == "Teacher"
-      @compositions = Composition.all(:errortags => nil)
-    else
-      @compositions = Composition.all(:student_id => session[:student_id])
-    end
-    erb :compositions
-  end
-  get '/feedback/:id' do
+  get '/teacher/feedback/:id' do
     @composition = Composition.get(params[:id])
-    erb :feedback
+    erb :t_feedback
   end
-  post '/feedback/:id' do
+  # This path is used in both t_feedback.erb and
+  # master-frontend.js; in the correctionform
+  # building code. This clumsy code needs to be changed.
+  post '/teacher/feedback/:id' do
     @composition = Composition.get(params[:id])
     @student = Student.get(@composition.student_id)
     @errors = Hash[params.find_all {|k,v| k =~ /^[0-9]+$/ }]
@@ -161,16 +185,39 @@ class MasterFrontend < Sinatra::Base
       e.student = @student
       e.save
     end
-    '<h1>Registered!</h1>'
+    redirect to '/teacher/dashboard'
   end
-  get '/respond/:id' do
+  get '/student/dashboard/?' do
+    @student = Student.get(session[:student_id])
+    @assignments = Assignment.all- @student.compositions.assignments
+    @feedback = @student.errortags
+    @compositions = @student.compositions
+    erb :s_dashboard
+  end
+  get '/student/compositions/new/:id' do
+    @assignment = params[:id]
+    erb :s_new_composition
+  end
+  post '/student/compositions/new' do
+    @assignment = params[:assignment_id]
+    @content = params[:maintext]
+    @student = Student.first(name: params[:student_name]).id
+    Composition.create(content: @content, student_id: @student, assignment_id: @assignment)
+    redirect to '/student/dashboard'
+  end
+# rewrite s_respond to be a partial that give only the response form
+# draw them together with the composition if there is feedback to respond to
+  get '/student/composition/:id' do
+    return "作文を表示するページ"
+  end
+  get '/student/respond/:id' do
     @composition = Composition.get(params[:id])
     @errors = Errortag.all(composition_id: params[:id])
     @offsets = @errors.collect {|e| [e.start,e.end]}
     @composition.content = highlight_error(@composition.content, @offsets)
-    erb :respond
+    erb :s_respond
   end
-  post '/respond' do
+  post '/student/respond' do
     @responses = Hash[params.find_all {|k,v| k =~ /^[0-9]+$/ }]
     @responses.each do |k,v|
       r = Response.new(v)
@@ -178,8 +225,9 @@ class MasterFrontend < Sinatra::Base
       r.student = r.errortag.student
       r.save
     end
-    '<h1>Responses registered!</h1>'
+    redirect to '/student/dashboard'
   end
+ 
   get '/showparam' do
     params
   end
