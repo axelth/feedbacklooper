@@ -13,6 +13,13 @@ are not going well at all
 var glob = {
     "errorArray": [],
     "currentError":null,
+    "setDefaultDeadline": function setDefaultDeadline() {
+	var date, input;
+	date = new Date();
+	date.setDate(date.getDate() + 14);
+	input = document.getElementById("date_input");
+	input.value = [date.getFullYear(), date.getMonth() + 1, date.getDate()].join("-");
+    },
     //Create an error object (not properly defined yet) and assign it to currentError
     "createErrorStub": function createErrorStub(textarea, currentError) {
 	var text = textarea.value,
