@@ -26,8 +26,9 @@ begin
     Student.create name:"#{s}"
   end
   puts "Create Assignments"
+  d = Time.now + (4 * 7 * 24 * 60 * 60)
   texts.collect {|t| t[10..11]}.uniq.each do |a|
-    Assignment.create title:"#{a}"
+    Assignment.create title: "#{a}",description: "",deadline: Date.new(d.year, d.month, d.day)
   end
   puts "Create Compositions"
   texts.each do |t|

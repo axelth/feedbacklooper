@@ -31,6 +31,7 @@ class Assignment
   include DataMapper::Resource
   property :id, Serial
   property :title, String
+  property :description, String, :length => 400
   property :deadline, Date
 
   has n, :compositions
@@ -166,8 +167,9 @@ class MasterFrontend < Sinatra::Base
   end
   post '/teacher/assignment' do
     title = params[:title]
+    description = params[:description]
     datearr = params[:date].split("-").map {|c| c.to_i}
-    Assignment.create(title: title,deadline: Date.new(*datearr))
+    Assignment.create(title: title,description: description,deadline: Date.new(*datearr))
     redirect to '/teacher/dashboard'
   end
   get '/teacher/feedback/:id' do
