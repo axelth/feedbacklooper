@@ -70,7 +70,8 @@ class Response
   property :understanding, String, :required => true
   # I must change the name of this property to "response" here and in the view
   property :comment, String
-
+  property :viewed, Boolean, :default => false
+  
   belongs_to :errortag
   belongs_to :student
 end
