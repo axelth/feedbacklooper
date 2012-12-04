@@ -154,7 +154,7 @@ class MasterFrontend < Sinatra::Base
       [a, Composition.all(assignment: a).length]
     end
     @compositions = Composition.all(errortags: nil,limit: 10)
-    @responses = Response.all(limit: 10)
+    @responses = Response.all(viewed: false, limit: 10)
     erb :t_dashboard
   end
 
