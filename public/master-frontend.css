@@ -16,6 +16,7 @@ div {}
 .left {
     float:left;
     width:510px;
+    padding:3px;
     border-right: 1px solid grey;
 }
 .left  #studenttext {

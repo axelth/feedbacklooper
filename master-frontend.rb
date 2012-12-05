@@ -200,7 +200,7 @@ class MasterFrontend < Sinatra::Base
     erb :s_dashboard
   end
   get '/student/compositions/new/:id' do
-    @assignment = params[:id]
+    @assignment = Assignment.get(params[:id])
     erb :s_new_composition
   end
   post '/student/compositions/new' do
