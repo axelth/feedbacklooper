@@ -6,6 +6,7 @@ end
 require 'erb'
 require 'sinatra/base'
 require 'sinatra/partial'
+require 'sinatra/namespace'
 require 'data_mapper'
 require 'dm-sqlite-adapter'
 
@@ -111,9 +112,9 @@ class MasterFrontend < Sinatra::Base
         else
           @user_type = user_type
           @redirect_url = if user_type == 'Teacher'
-                            '/student/dashboard'
+                            url '/student/dashboard'
                           else
-                            '/teacher/dashboard'
+                            url '/teacher/dashboard'
                           end
           erb :wronguser
           halt
@@ -123,6 +124,7 @@ class MasterFrontend < Sinatra::Base
   end
   # configuration
   register Sinatra::Partial
+  set :port, 8080
   set :partial_template_engine, :erb
   set :sessions, true
   

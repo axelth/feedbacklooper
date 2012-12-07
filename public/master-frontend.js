@@ -3,9 +3,9 @@ cursor position fetching code inspired by Diego Perini
 javascript.nwbox.com/cursor_position/
 TODO What to do with overlapping tags?
 TODO Add edit-button to errorlist
-TODO Reset selection upon error creation? 
+TODO Reset selection upon error creation?
 TODO decrease dependence on glob.variables.  Pass in more parameters to functions.
-I need to re-learn when a passed in object is modified in js. 
+I need to re-learn when a passed in object is modified in js.
 TODO decrease coupling between html and js (pass id-attributes to functions).
 Because I don't quite understand when objects are modified my current attempts att decoupling
 are not going well at all
@@ -124,7 +124,7 @@ var glob = {
 	e,p;
 	newForm.setAttribute('id', 'correctionform');
 	newForm.setAttribute('name', 'correctionform');
-	newForm.setAttribute('action', '/teacher/feedback/' + this.compositionId);
+	newForm.setAttribute('action', form.getAttribute('action'));
 	newForm.setAttribute('method', 'post');
 	for (e = 0; e < errorArray.length; e += 1) {
 	    p = document.createElement('p');
@@ -187,12 +187,12 @@ var glob = {
     "setCompositionId": function setCompositionId(id) {
 	this.compositionId = id;
     },
-    
+
     "postErrorArray": function postErrorArray(errorArray) {
 	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.open("POST", "/feedback/" + this.compositionId);
 	xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 	xmlhttp.send(JSON.stringify(errorArray));
 	}
-    
+
 };
