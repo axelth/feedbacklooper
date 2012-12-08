@@ -13,6 +13,7 @@ are not going well at all
 var glob = {
     "errorArray": [],
     "currentError":null,
+    "text": null,
     "setDefaultDeadline": function setDefaultDeadline() {
 	var date, input;
 	date = new Date();
@@ -22,10 +23,11 @@ var glob = {
     },
     //Create an error object (not properly defined yet) and assign it to currentError
     "createErrorStub": function createErrorStub(textarea, currentError) {
-	var text = textarea.value,
-	selStart = textarea.selectionStart,
-	selEnd = textarea.selectionEnd,
-	string = text.substring(selStart,selEnd);
+	this.text = this.text || textarea.textContent;
+	var selection = document.getSelection().getRangeAt(0).cloneRange();
+	selStart = selection.startOffset,
+	selEnd = selection.endOffset,
+	string = selection.toString();
 	currentError = currentError || {};
 	if (!currentError.hasOwnProperty('type')) {
 	    currentError = {'start':selStart,
@@ -62,6 +64,7 @@ var glob = {
 	this.updateCorrectionForm(this.errorArray);
 	this.currentError = currentError = null;
 	this.updateCurrentErrorDisp(currentError);
+	this.styleText(this.errorArray);
     },
     //Update the currenterror display
     "updateCurrentErrorDisp": function updateCurrentErrorDisp(currentError) {
@@ -99,20 +102,18 @@ var glob = {
 	}
 	table.replaceChild(newbody,oldbody);
     },
+    // Cycle backwards through the error array and wrap error in span tags.
+    // TODO generalize the function an allow the class to be passed in a parameter.
   "styleText": function(errorArray) {
-      var i,e,text,text2,pointer;
-      text = document.getElementById("originaltext").value;
-      text2 = "";
-      pointer = 0;
-      for (i = 0; i < errorArray.length; i += 1) {
+      var i,e,text2,node;
+      node = document.getElementById("styledtext");
+      text2 = this.text.substr(0);
+      for (i = errorArray.length - 1; i >= 0; i -= 1) {
 	  e = errorArray[i];
-	  text2 += text.substr(pointer, e.start) + '<span class="error">'  + e.string + '</span>';
-	  pointer = e.end;
+	  text2 = text2.substr(0, e.start) + '<span class="error">'  + e.string + '</span>' + text2.substr(e.end);
       }
-      text2 += text.substr(pointer);
+      node.removeChild(node.firstChild);
       document.getElementById("styledtext").innerHTML = text2;
-      pointer = 0;
-      text2 = "";
     },
     //take an array of data and return a row with one cell for each item
     //if and index 'i' is given, add a delete-button at the end of the row.
