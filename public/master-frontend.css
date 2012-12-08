@@ -38,6 +38,9 @@ div {}
     word-wrap: break-word;
     white-space: pre-wrap;
 }
+.left #studenttext #originaltext:active {
+    opacity: 0.7;
+}
 .left #studenttext #styledtext {
     z-index: 1;
     position: absolute;
