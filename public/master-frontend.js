@@ -99,16 +99,21 @@ var glob = {
 	}
 	table.replaceChild(newbody,oldbody);
     },
-  "styleText": function styleText(errorArray) {
-    var i,e,text,text2,modifier;
-    text = document.getElementById("originaltext").value;
-    text2 = text.substr(0,errorArray[0].start);
-    modifier = 0;
-    for (i = 0; i < errorArray.length; i += 1) {
-      e = errorArray[i];
-      text2 += text.substr(
+  "styleText": function(errorArray) {
+      var i,e,text,text2,pointer;
+      text = document.getElementById("originaltext").value;
+      text2 = "";
+      pointer = 0;
+      for (i = 0; i < errorArray.length; i += 1) {
+	  e = errorArray[i];
+	  text2 += text.substr(pointer, e.start) + '<span class="error">'  + e.string + '</span>';
+	  pointer = e.end;
       }
-    }
+      text2 += text.substr(pointer);
+      document.getElementById("styledtext").innerHTML = text2;
+      pointer = 0;
+      text2 = "";
+    },
     //take an array of data and return a row with one cell for each item
     //if and index 'i' is given, add a delete-button at the end of the row.
     //TODO factor out the button creation code.

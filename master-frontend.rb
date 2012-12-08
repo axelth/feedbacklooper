@@ -6,7 +6,6 @@ end
 require 'erb'
 require 'sinatra/base'
 require 'sinatra/partial'
-require 'sinatra/namespace'
 require 'data_mapper'
 require 'dm-sqlite-adapter'
 
