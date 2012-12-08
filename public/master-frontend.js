@@ -99,6 +99,16 @@ var glob = {
 	}
 	table.replaceChild(newbody,oldbody);
     },
+  "styleText": function styleText(errorArray) {
+    var i,e,text,text2,modifier;
+    text = document.getElementById("originaltext").value;
+    text2 = text.substr(0,errorArray[0].start);
+    modifier = 0;
+    for (i = 0; i < errorArray.length; i += 1) {
+      e = errorArray[i];
+      text2 += text.substr(
+      }
+    }
     //take an array of data and return a row with one cell for each item
     //if and index 'i' is given, add a delete-button at the end of the row.
     //TODO factor out the button creation code.
