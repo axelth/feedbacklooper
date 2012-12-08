@@ -2,8 +2,8 @@
 <html>
   <head>
     <meta charset="utf8">
-    <script type="text/javascript" src="/master-frontend.js"></script>
-    <link rel="stylesheet" type="text/css" href="/master-frontend.css">
+    <script type="text/javascript" src="<%=url('/master-frontend.js')%>"></script>
+    <link rel="stylesheet" type="text/css" href="<%=url('/master-frontend.css')%>">
   </head>
   <body <%= defined?(@composition) ? "onload=\"glob.setCompositionId(#{@composition.id});\"" : '' %>>
     <%= yield %>

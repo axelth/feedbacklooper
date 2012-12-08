@@ -3,9 +3,9 @@ cursor position fetching code inspired by Diego Perini
 javascript.nwbox.com/cursor_position/
 TODO What to do with overlapping tags?
 TODO Add edit-button to errorlist
-TODO Reset selection upon error creation? 
+TODO Reset selection upon error creation?
 TODO decrease dependence on glob.variables.  Pass in more parameters to functions.
-I need to re-learn when a passed in object is modified in js. 
+I need to re-learn when a passed in object is modified in js.
 TODO decrease coupling between html and js (pass id-attributes to functions).
 Because I don't quite understand when objects are modified my current attempts att decoupling
 are not going well at all
@@ -13,6 +13,13 @@ are not going well at all
 var glob = {
     "errorArray": [],
     "currentError":null,
+    "setDefaultDeadline": function setDefaultDeadline() {
+	var date, input;
+	date = new Date();
+	date.setDate(date.getDate() + 14);
+	input = document.getElementById("date_input");
+	input.value = [date.getFullYear(), date.getMonth() + 1, date.getDate()].join("-");
+    },
     //Create an error object (not properly defined yet) and assign it to currentError
     "createErrorStub": function createErrorStub(textarea, currentError) {
 	var text = textarea.value,
@@ -92,6 +99,21 @@ var glob = {
 	}
 	table.replaceChild(newbody,oldbody);
     },
+  "styleText": function(errorArray) {
+      var i,e,text,text2,pointer;
+      text = document.getElementById("originaltext").value;
+      text2 = "";
+      pointer = 0;
+      for (i = 0; i < errorArray.length; i += 1) {
+	  e = errorArray[i];
+	  text2 += text.substr(pointer, e.start) + '<span class="error">'  + e.string + '</span>';
+	  pointer = e.end;
+      }
+      text2 += text.substr(pointer);
+      document.getElementById("styledtext").innerHTML = text2;
+      pointer = 0;
+      text2 = "";
+    },
     //take an array of data and return a row with one cell for each item
     //if and index 'i' is given, add a delete-button at the end of the row.
     //TODO factor out the button creation code.
@@ -117,7 +139,7 @@ var glob = {
 	e,p;
 	newForm.setAttribute('id', 'correctionform');
 	newForm.setAttribute('name', 'correctionform');
-	newForm.setAttribute('action', '/teacher/feedback/' + this.compositionId);
+	newForm.setAttribute('action', form.getAttribute('action'));
 	newForm.setAttribute('method', 'post');
 	for (e = 0; e < errorArray.length; e += 1) {
 	    p = document.createElement('p');
@@ -180,12 +202,12 @@ var glob = {
     "setCompositionId": function setCompositionId(id) {
 	this.compositionId = id;
     },
-    
+
     "postErrorArray": function postErrorArray(errorArray) {
 	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.open("POST", "/feedback/" + this.compositionId);
 	xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 	xmlhttp.send(JSON.stringify(errorArray));
 	}
-    
+
 };

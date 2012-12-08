@@ -1,5 +1,5 @@
 <ul>
 <% assignments.each do |a|%>
-<li>課題：<%=a.title%>, <a href="/student/compositions/new/<%=a.id%>"> 作文を作成 </a></li>
+<li>課題：<%=a.title%>, <a href="<%=url('/student/compositions/new/')%><%=a.id%>"> 作文を作成 </a></li>
 <% end %>
 </ul>

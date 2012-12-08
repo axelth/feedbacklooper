@@ -31,7 +31,8 @@ class Assignment
   include DataMapper::Resource
   property :id, Serial
   property :title, String
-  property :active, Boolean
+  property :description, String, :length => 400
+  property :deadline, Date
 
   has n, :compositions
 end
@@ -69,7 +70,8 @@ class Response
   property :understanding, String, :required => true
   # I must change the name of this property to "response" here and in the view
   property :comment, String
-
+  property :viewed, Boolean, :default => false
+  
   belongs_to :errortag
   belongs_to :student
 end
@@ -109,9 +111,9 @@ class MasterFrontend < Sinatra::Base
         else
           @user_type = user_type
           @redirect_url = if user_type == 'Teacher'
-                            '/student/dashboard'
+                            url '/student/dashboard'
                           else
-                            '/teacher/dashboard'
+                            url '/teacher/dashboard'
                           end
           erb :wronguser
           halt
@@ -121,6 +123,7 @@ class MasterFrontend < Sinatra::Base
   end
   # configuration
   register Sinatra::Partial
+  set :port, 8080
   set :partial_template_engine, :erb
   set :sessions, true
   
@@ -152,7 +155,7 @@ class MasterFrontend < Sinatra::Base
       [a, Composition.all(assignment: a).length]
     end
     @compositions = Composition.all(errortags: nil,limit: 10)
-    @responses = Response.all(limit: 10)
+    @responses = Response.all(viewed: false, limit: 10)
     erb :t_dashboard
   end
 
@@ -165,7 +168,10 @@ class MasterFrontend < Sinatra::Base
     erb :show_assignment
   end
   post '/teacher/assignment' do
-    Assignment.create(title: params[:title],active: nil)
+    title = params[:title]
+    description = params[:description]
+    datearr = params[:date].split("-").map {|c| c.to_i}
+    Assignment.create(title: title,description: description,deadline: Date.new(*datearr))
     redirect to '/teacher/dashboard'
   end
   get '/teacher/feedback/:id' do
@@ -195,7 +201,7 @@ class MasterFrontend < Sinatra::Base
     erb :s_dashboard
   end
   get '/student/compositions/new/:id' do
-    @assignment = params[:id]
+    @assignment = Assignment.get(params[:id])
     erb :s_new_composition
   end
   post '/student/compositions/new' do
