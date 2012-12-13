@@ -4,16 +4,13 @@
       <tr><th>Nr</th><th>String</th><th>Type</th><th>Action</th><th></th></tr>
     </thead>
     <tbody>
-      <% @errors.each_with_index do |e,i|%>
-	<tr>
-	  <td><%=(i + 1).to_s%></td><td><%="#{e.string}"%></td><td><%=e.type%></td><td><%=e.action%></td>
-	</tr>
-      <% end %>
+      
     </tbody>
   </table>
-  <table id="feedbacktable">
-  <form id="feedbackform" action="<%=url('/student/respond')%>" method="post">
-  <tbody>
+  
+  <form id="responseform" action="<%=url('/student/respond')%>" method="post">
+    <table id="feedbacktable">
+    <tbody>
     <% @errors.each do |e| %>
       <tr><td>Correction: </td><td><%= e.correction %></td></tr>
       <tr><td>Comment: </td><td><%= e.comment %></td></tr>
@@ -33,5 +30,6 @@
 </div>
 
 <div class='left'>
-  <p id="originaltext"><%= @composition.content %><p>
+  <p id="styledtext"><%= @composition.content %><p>
 </div>
+

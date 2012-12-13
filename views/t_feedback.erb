@@ -1,7 +1,7 @@
 
     <div class="left">
       <div id="studenttext">Student's text<br>
-	<div id="originaltext" onMouseUp="glob.createErrorStub(this,glob.currentError);"><%= @composition.content %></div>
+	<div id="originaltext" onMouseUp="glob.createErrorStub();"><%= @composition.content %></div>
 	<div id="styledtext"><%=@composition.content%></div> 
       </div>
 
@@ -13,22 +13,22 @@
     <div class="right">
       <div class="menu" id="errortype">Type of error<br>
 	<table>
-	  <tr><td id="omission" onclick="glob.addTypeToError(this.id,glob.currentError);">omission</td></tr>
-	  <tr><td  id="wordorder" onclick="glob.addTypetoError(this.id, glob.currentError);">word order</td></tr>
-	  <tr><td id="lexical" onclick="glob.addTypetoError(this.id, glob.currentError);">lexical</td></tr>
-	  <tr><td id="register" onclick="glob.addTypetoError(this.id, glob.currentError);">register</td></tr>
-	  <tr><td  id="tense" onclick="glob.addTypetoError(this.id, glob.currentError);">tense</td></tr>
-	  <tr><td id="voice" onclick="glob.addTypetoError(this.id, glob.currentError);">voice</td></tr>
+	  <tr><td id="omission" onclick="glob.addTypeToError(this.id);">omission</td></tr>
+	  <tr><td  id="wordorder" onclick="glob.addTypetoError(this.id);">word order</td></tr>
+	  <tr><td id="lexical" onclick="glob.addTypetoError(this.id);">lexical</td></tr>
+	  <tr><td id="register" onclick="glob.addTypetoError(this.id);">register</td></tr>
+	  <tr><td  id="tense" onclick="glob.addTypetoError(this.id);">tense</td></tr>
+	  <tr><td id="voice" onclick="glob.addTypetoError(this.id);">voice</td></tr>
 	</table>
       </div>
       <div class="menu" id="editaction">Edit action<br>
 	<table>
-	  <tr><td id="delete" onclick="glob.addActionToErrorStub(this.id, glob.currentError);">delete</td></tr>
-	  <tr><td id="replace" onclick="glob.addActionToErrorStub(this.id, glob.currentError);">replace</td></tr>
-	  <tr><td id="edit" onclick="glob.addActionToErrorStub(this.id, glob.currentError);">edit</td></tr>
-	  <tr><td id="move" onclick="glob.addActionToErrorStub(this.id, glob.currentError);">move</td></tr>
-	  <tr><td id="insert" onclick="glob.addActionToErrorStub(this.id, glob.currentError);">insert</td></tr>
-	  <tr><td id="mark" onclick="glob.addActionToErrorStub(this.id, glob.currentError);">mark</td></tr>
+	  <tr><td id="delete" onclick="glob.addActionToErrorStub(this.id);">delete</td></tr>
+	  <tr><td id="replace" onclick="glob.addActionToErrorStub(this.id);">replace</td></tr>
+	  <tr><td id="edit" onclick="glob.addActionToErrorStub(this.id);">edit</td></tr>
+	  <tr><td id="move" onclick="glob.addActionToErrorStub(this.id);">move</td></tr>
+	  <tr><td id="insert" onclick="glob.addActionToErrorStub(this.id);">insert</td></tr>
+	  <tr><td id="mark" onclick="glob.addActionToErrorStub(this.id);">mark</td></tr>
 	</table>
       </div>
       <div id="errorlist">

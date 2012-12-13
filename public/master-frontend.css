@@ -93,6 +93,9 @@ div {}
 .error {
     background-color: lightgrey;
 }
+span.error > span.error {
+    background-color: navajowhite;
+}
 .errors {
     float: left;x
 }
