@@ -165,7 +165,7 @@ class MasterFrontend < Sinatra::Base
   get '/teacher/assignments/:id' do
     @assignment = Assignment.get(params[:id])
     @compositions = Composition.all(:assignment => @assignment)
-    erb :show_assignment
+    erb :t_show_assignment
   end
   post '/teacher/assignment' do
     title = params[:title]
