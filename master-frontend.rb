@@ -196,6 +196,10 @@ class MasterFrontend < Sinatra::Base
     end
     redirect to '/teacher/dashboard'
   end
+  get '/teacher/compositions' do
+    @compositions = Composition.all
+    erb :t_compositions
+  end
   get '/teacher/compositions/*/errors' do
     composition = Composition.get(params[:splat])
     errortags = composition.errortags

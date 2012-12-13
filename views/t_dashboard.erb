@@ -1,5 +1,8 @@
 <h1>教師のダッシュボード</h1>
-<%= partial(:t_assignments, {locals: {assignments: @assignments}}) %>
-<%= partial(:t_compositions, {locals: {compositions: @compositions}}) %>
-<%= partial(:t_responses, {locals: {responses: @responses}}) %>
+<h2>課題</h2>
+<%= partial(:t_p_assignments, {locals: {assignments: @assignments}}) %>
+<h2>添削されていない作文</h2>
+<%= partial(:t_p_compositions, {locals: {compositions: @compositions}}) %>
+<h2>未読のフィードバック回答</h2>
+<%= partial(:t_p_responses, {locals: {responses: @responses}}) %>
 
