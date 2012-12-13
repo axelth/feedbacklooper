@@ -1,6 +1,6 @@
 <ul>
 <% compositions.each do |c| %>
-  <li>課題：<%=c.assignment.id%>, 作者: <%=c.student.id%> 
+  <li>課題：<%=c.assignment.id%>, 作者: <%=c.student.name%> 
     <a href="<%=url('/teacher/feedback/')%><%=c.id%>">添削する</a></li>
 <% end %>
 </ul>
