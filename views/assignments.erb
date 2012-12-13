@@ -1,8 +1,0 @@
-<h1> Choose an assignment </h1>
-<ul>
-    <% @assignments.each do |a| %>
-    <li><%= a.title %>: <a href="assignments/<%= a.id %>">View</a>,
-    <a href="compositions/new?assignment=<%= a.id %>">Submit composition</a></li>
-    <% end %>
-</ul>
-      
