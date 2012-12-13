@@ -184,6 +184,9 @@ class MasterFrontend < Sinatra::Base
   post '/teacher/feedback/:id' do
     @composition = Composition.get(params[:id])
     @student = Student.get(@composition.student_id)
+    unless @composition.errortags.empty?
+      @composition.errortags.destroy
+    end
     @errors = Hash[params.find_all {|k,v| k =~ /^[0-9]+$/ }]
     @errors.each do |k,v|
       e = Errortag.new(v)
@@ -192,6 +195,12 @@ class MasterFrontend < Sinatra::Base
       e.save
     end
     redirect to '/teacher/dashboard'
+  end
+  get '/teacher/compositions/*/errors' do
+    composition = Composition.get(params[:splat])
+    errortags = composition.errortags
+    content_type :json
+    errortags.to_json
   end
   get '/student/dashboard/?' do
     @student = Student.get(session[:student_id])
@@ -220,7 +229,7 @@ class MasterFrontend < Sinatra::Base
     @composition = Composition.get(params[:id])
     @errors = Errortag.all(composition_id: params[:id])
     @offsets = @errors.collect {|e| [e.start,e.end]}
-    @composition.content = highlight_error(@composition.content, @offsets)
+    @composition.content = @composition.content #highlight_error(@composition.content, @offsets)
     erb :s_respond
   end
   post '/student/respond' do
@@ -233,8 +242,15 @@ class MasterFrontend < Sinatra::Base
     end
     redirect to '/student/dashboard'
   end
- 
-  get '/showparam' do
+  get '/student/compositions/*/errors' do
+    composition = Student.first(name: session[:studentname]).compositions.get(params[:splat])
+    
+  end
+
+  get '/showparams' do
+    params
+  end
+  post '/showparams' do
     params
   end
   run! if app_file == $0

@@ -11,63 +11,104 @@ Because I don't quite understand when objects are modified my current attempts a
 are not going well at all
 */
 var glob = {
+    "name" : "glob",
     "errorArray": [],
     "currentError":null,
+    "text": null,
+    "prefix": null,
     "setDefaultDeadline": function setDefaultDeadline() {
-	var date, input;
-	date = new Date();
-	date.setDate(date.getDate() + 14);
+	var date = new Date(),
 	input = document.getElementById("date_input");
-	input.value = [date.getFullYear(), date.getMonth() + 1, date.getDate()].join("-");
+	date.setDate(date.getDate() + 14);
+	input.value = [date.getFullYear(), date.getMonth() + 1,
+		       date.getDate()].join("-");
+    },
+    //called in onload in layout.erb
+    "setCompositionId": function setCompositionId(id) {
+	this.compositionId = id;
+    },
+    "setText": function setText() {
+	var textarea = (document.getElementById("originaltext") ||
+			document.getElementById("styledtext"));
+	this.text = textarea.textContent;
+    },
+    "setPrefix": function setPrefix() {
+	var arr = window.location.pathname.split("/");
+	if (arr[0] !== "login" || arr[0] !== "student" || arr[0] !== "teacher") {
+	    this.prefix = arr[0];    
+	} else {
+	    this.prefix = "";
+	}
+    },
+    "setErrorArray": function setErrorArray() {
+	
+	var endpoint = this.teacher ? '/teacher/compositions' : '/student/compositions',
+	json = this.getJSON(endpoint,"/" + String(this.compositionId) + "/errors");
+	this.errorArray = JSON.parse(json);
+    },
+    "setTeacher": function setTeacher(teacher) {
+	this.teacher = teacher;
+    },
+    "compositionPageSetup": function compositionPageSetup(id,teacher) {
+	this.setCompositionId(id);
+	this.setText();
+	this.setTeacher(teacher);
+	this.setErrorArray();
+	if (this.errorArray !== []) {
+	    this.updateDisplay();
+	}
     },
     //Create an error object (not properly defined yet) and assign it to currentError
-    "createErrorStub": function createErrorStub(textarea, currentError) {
-	var text = textarea.value,
-	selStart = textarea.selectionStart,
-	selEnd = textarea.selectionEnd,
-	string = text.substring(selStart,selEnd);
-	currentError = currentError || {};
-	if (!currentError.hasOwnProperty('type')) {
-	    currentError = {'start':selStart,
+    "createErrorStub": function createErrorStub() {
+	var selection = document.getSelection().getRangeAt(0).cloneRange(),
+	selStart = selection.startOffset,
+	selEnd = selection.endOffset,
+	string = selection.toString();
+	this.currentError = this.currentError || {};
+	if (!this.currentError.hasOwnProperty('type')) {
+	    this.currentError = {'start':selStart,
 			    'end':selEnd,
 			    'string':string};
 	}
 	else if (window.confirm('Do you wish to change the current error to: ' + string +'?')){
-	    currentError.start = selStart;
-	    currentError.end = selEnd;
-	    currentError.string = string;
+	    this.currentError.start = selStart;
+	    this.currentError.end = selEnd;
+	    this.currentError.string = string;
 	}
-	this.currentError = currentError;
-	this.updateCurrentErrorDisp(this.currentError);
+	this.updateCurrentErrorDisp();
     },
-    "addTypetoError": function addTypeToError(errorType,currentError) {
-	currentError.type = errorType;
-	this.currentError = currentError;
-	this.updateCurrentErrorDisp(currentError);
+    "addTypetoError": function addTypeToError(errorType) {
+	this.currentError.type = errorType;
+	this.updateCurrentErrorDisp();
     },
     //modifies errorArray and call updateErrorList on the new array.
     //The modification consists of pushing currentError and then sorting the
     //errorArray with sortErrorArray.
     //TODO check for overlapping errors
     //TODO factor out the updating of the errorArray (push,sort)
-    "addActionToErrorStub": function(action, currentError) {
+    "addActionToErrorStub": function(action) {
 	if (this.currentError === null) {
 	    window.alert("No error is marked, or marked error is already added to the error list");
 	    return;
 	}
-	currentError.action = action;
-	this.errorArray.push(currentError);
+	this.currentError.action = action;
+	this.errorArray.push(this.currentError);
 	this.sortErrorArray(this.errorArray);
-	this.updateErrorList(this.errorArray);
-	this.updateCorrectionForm(this.errorArray);
-	this.currentError = currentError = null;
-	this.updateCurrentErrorDisp(currentError);
+	this.currentError = null;
+	this.updateDisplay();
+    },
+    "updateDisplay": function updateDisplay() {
+	this.doIfElement("errortable", "updateErrorList");
+	this.doIfElement("correctionform","updateCorrectionForm");
+	this.doIfElement("currenterror","updateCurrentErrorDisp");
+	this.styleText();
     },
     //Update the currenterror display
-    "updateCurrentErrorDisp": function updateCurrentErrorDisp(currentError) {
-	var dispDiv,oldDisp,newDisp,errorArr;
-	dispDiv = document.getElementById("currenterror");
-	oldDisp = dispDiv.firstChild;
+    "updateCurrentErrorDisp": function updateCurrentErrorDisp() {
+	var currentError = this.currentError,
+	dispDiv = document.getElementById("currenterror"),
+	oldDisp = dispDiv.firstChild,
+	errorArr, newDisp;
 	if (!currentError) {
 	    newDisp = document.createTextNode("none");
 	    dispDiv.style.backgroundColor = "lightgreen";
@@ -87,43 +128,55 @@ var glob = {
 	dispDiv.replaceChild(newDisp,oldDisp);
     },
     //Update the errorlist by constructing a new tbody from the errorArray.
-    "updateErrorList":function updateErrorList(errorArray){
+    "updateErrorList":function updateErrorList(){
 	var table = document.getElementById("errortable"),
 	newbody = document.createElement('tbody'),
-	oldbody = table.lastChild,
+	oldbody = table.getElementsByTagName('tbody')[0],
 	i,e;
+	if (oldbody === undefined && this.errorArray.length === 0) {
+	    return;
+	}
 	for (i = 0; i < this.errorArray.length; i += 1) {
-	    e = errorArray[i];
+	    e = this.errorArray[i];
 	    newbody.appendChild(this.createTblRow([String(i + 1),
 						   e['string'],e['type'],e['action']],i));
 	}
-	table.replaceChild(newbody,oldbody);
+	if (oldbody) {
+	    table.replaceChild(newbody,oldbody);	    
+	} else {
+	    table.appendChild(newbody);
+	}
+
     },
-  "styleText": function(errorArray) {
-      var i,e,text,text2,pointer;
-      text = document.getElementById("originaltext").value;
-      text2 = "";
-      pointer = 0;
-      for (i = 0; i < errorArray.length; i += 1) {
-	  e = errorArray[i];
-	  text2 += text.substr(pointer, e.start) + '<span class="error">'  + e.string + '</span>';
-	  pointer = e.end;
+    // Cycle backwards through the error array and wrap error in span tags.
+    // TODO generalize the function an allow the class to be passed in a parameter.
+  "styleText": function() {
+      var node = document.getElementById("styledtext"),
+      text2 = "",
+      startend_hsh = {},
+      i,e;
+      for (i = 0; i < this.errorArray.length; i += 1) {
+	  e = this.errorArray[i];
+	  startend_hsh[e.start] = '<span class="error">';
+	  startend_hsh[e.end] = '</span>';
       }
-      text2 += text.substr(pointer);
+      for (i = 0; i < this.text.length; i += 1) {
+	  text2 = text2 + (startend_hsh[i] || "") + this.text[i];
+      }
+      node.removeChild(node.firstChild);
       document.getElementById("styledtext").innerHTML = text2;
-      pointer = 0;
-      text2 = "";
     },
     //take an array of data and return a row with one cell for each item
     //if and index 'i' is given, add a delete-button at the end of the row.
     //TODO factor out the button creation code.
     "createTblRow": function createTblRow(data,i) {
-	var newrow = document.createElement('tr'),j,delBtn;
+	var newrow = document.createElement('tr'),
+	j,delBtn;
 	for (j = 0; j < data.length; j += 1) {
 	    newrow.insertCell(-1).appendChild(
 		document.createTextNode(data[j]));
 	}
-	if (i !== undefined) {
+	if (i !== undefined && this.teacher) {
 	    delBtn = document.createElement('button');
 	    delBtn.setAttribute('name',i);
 	    delBtn.setAttribute('onclick',"glob.delError(this.name,glob.errorArray);");
@@ -133,9 +186,10 @@ var glob = {
 	return newrow;
     },
     //replace the correction form with a new one based on errorArray, called from updateErrorList()
-    "updateCorrectionForm": function updateCorrectionForm(errorArray){
+    "updateCorrectionForm": function updateCorrectionForm(){
 	var form = document.getElementById("correctionform"),
 	newForm = document.createElement('form'),
+	errorArray = this.errorArray,
 	e,p;
 	newForm.setAttribute('id', 'correctionform');
 	newForm.setAttribute('name', 'correctionform');
@@ -186,11 +240,9 @@ var glob = {
 	this.errorArray[index][attribute] = input.value;
     },
     //Remove error at index from errorArray and updates the errorlist.
-    "delError": function delError(index,errorArray) {
-	errorArray.splice(index,1);
-	this.errorArray = errorArray;
-	this.updateErrorList(this.errorArray);
-	this.updateCorrectionForm(this.errorArray);
+    "delError": function delError(index) {
+	this.errorArray.splice(index,1);
+	this.updateDisplay();
     },
     //It's getting obvious that I need to define a proper error object.
     "sortErrorArray": function sortErrorArray(errorArray){
@@ -198,16 +250,33 @@ var glob = {
 				   return a["start"] - b["start"];
 			       });
     },
-    //called in onload in layout.erb
-    "setCompositionId": function setCompositionId(id) {
-	this.compositionId = id;
+   
+    "getJSON": function getJSON(endpoint, identifier) {
+	var req = new XMLHttpRequest(),
+	response;
+	req.onreadystatechange = function(response) {
+	  if (req.readyState === 4) {
+	      if (req.status === 200 || req.status === 304) {
+		  response = req.responseText;
+	      }
+	  }
+	};
+	req.open("GET",this.prefix + endpoint + identifier, false);
+	req.send(null);
+	return req.response;
     },
-
     "postErrorArray": function postErrorArray(errorArray) {
 	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.open("POST", "/feedback/" + this.compositionId);
 	xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 	xmlhttp.send(JSON.stringify(errorArray));
+	},
+    "elementThere": function elementThere(name) {
+	return Boolean(document.getElementById(name));
+    },
+    "doIfElement": function doIfElement(eltid, func) {
+	if (document.getElementById(eltid)) {
+	    this[func]();	    
 	}
-
+    }
 };
