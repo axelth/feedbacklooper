@@ -248,7 +248,9 @@ class MasterFrontend < Sinatra::Base
   end
   get '/student/compositions/*/errors' do
     composition = Student.first(name: session[:studentname]).compositions.get(params[:splat])
-    
+    errortags = composition.errortags
+    content_type :json
+    errortags.to_json    
   end
 
   get '/showparams' do
