@@ -1,3 +1,4 @@
+# encoding: utf-8
 # make sure we work in the top-level dir
 unless Dir["*"].include? "util" #Dir.pwd =~ /master-frontend$/
   abort "run from top-level with (j)ruby util/db-setup.rb"
@@ -29,6 +30,9 @@ begin
   d = Time.now + (4 * 7 * 24 * 60 * 60)
   texts.values.collect {|t| t[10..11]}.uniq.each do |a|
     Assignment.create title: "#{a}",description: "",deadline: Date.new(d.year, d.month, d.day)
+  end
+  ["ワープロについて", "昔話", "タバコ・禁煙について", "外国語の学習について", "学習能力について", "大学入学試験について", "料理について", "歴史の出来事について"].each_with_index do |d,i|
+    Assignment.get(i + 1).update(description: d)
   end
   puts "Create Compositions"
   texts.each do |path,t|
