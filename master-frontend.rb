@@ -62,6 +62,14 @@ class Errortag
   belongs_to :composition
   belongs_to :student
   has n, :responses
+
+  def sentence
+    text = self.composition.content
+    sent_start = text.rindex(/[。？?！!\n]/,self.start) || 0
+    sent_start += 1 if sent_start > 0
+    sent_end = text.index(/[。？?！!\n]/,self.end) || -1
+    text[sent_start..sent_end].strip
+  end
 end
 
 class Response
@@ -109,14 +117,14 @@ class MasterFrontend < Sinatra::Base
         if session[:usertype].nil?
           redirect to '/login'
         else
+          @the_path = request.path_info
           @user_type = user_type
           @redirect_url = if user_type == 'Teacher'
                             url '/student/dashboard'
                           else
                             url '/teacher/dashboard'
                           end
-          erb :wronguser
-          halt
+          redirect to '/wronguser?url='+ @the_path + '&' + 'redirect=' + @redirect_url
         end
       end  
     end
@@ -126,6 +134,7 @@ class MasterFrontend < Sinatra::Base
   set :port, 8080
   set :partial_template_engine, :erb
   set :sessions, true
+  set :logging, true
   
   # before filters
   before '/teacher/*' do
@@ -200,11 +209,20 @@ class MasterFrontend < Sinatra::Base
     @compositions = Composition.all
     erb :t_compositions
   end
+  get '/teacher/compositions/json/:id' do
+    content_type :json
+    Composition.get(params[:id]).to_json
+  end
   get '/teacher/compositions/*/errors' do
     composition = Composition.get(params[:splat])
     errortags = composition.errortags
     content_type :json
     errortags.to_json
+  end
+  get '/teacher/errors' do
+    @errortags = Errortag.all
+    puts @errortags
+    erb :t_errors
   end
   get '/student/dashboard/?' do
     @student = Student.get(session[:student_id])
@@ -252,7 +270,9 @@ class MasterFrontend < Sinatra::Base
     content_type :json
     errortags.to_json    
   end
-
+  get '/wronguser' do
+    erb :wronguser
+  end
   get '/showparams' do
     params
   end

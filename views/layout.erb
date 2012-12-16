@@ -2,10 +2,25 @@
 <html>
   <head>
     <meta charset="utf8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	
+	<!-- 1140px Grid styles for IE -->
+	<!--[if lte IE 9]><link rel="stylesheet" href="<%=url('/css/ie.css')%>" type="text/css" media="screen" /><![endif]-->
+
+	<!-- The 1140px Grid - http://cssgrid.net/ -->
+	<link rel="stylesheet" href="<%=url('/css/1140.css')%>" type="text/css" media="screen" />
+	
+	<!-- Your styles -->
+	<link rel="stylesheet" href="<%=url('/css/styles.css')%>" type="text/css" media="screen" />
+	
+	<!--css3-mediaqueries-js - http://code.google.com/p/css3-mediaqueries-js/ - Enables media queries in some unsupported browsers-->
+	<script type="text/javascript" src="<%=url('/js/css3-mediaqueries.js')%>"></script>
+
     <script type="text/javascript" src="<%=url('/master-frontend.js')%>"></script>
     <link rel="stylesheet" type="text/css" href="<%=url('/master-frontend.css')%>">
   </head>
   <body onload="glob.setPrefix();<%= defined?(@composition) ? "glob.compositionPageSetup(#{@composition.id},#{session[:usertype] == 'Teacher'});" : '' %>">
+<%=session[:usertype] == 'Teacher' ? partial(:t_p_navbar): ''%>
     <%= yield %>
   </body>
 </html>

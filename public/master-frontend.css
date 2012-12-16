@@ -1,11 +1,42 @@
 /*hej*/
-body {
-    font-size: 12px;
-    width: 750px;
-}
-div {}
+.row {
 
+}
+h1 {
+    line-height: 27px;
+}
+h2 {
+    margin-top: 4px;
+}
+nav {
+    height: 20px;
+    background-color: #FCF6CF;
+    border: solid #FDFCDC 2px;
+    margin-bottom: 10px;
+    padding: 5px;
+}
+.buttonlike, nav > a {
+    border: solid lightgrey 1px;
+    box-shadow: 1px 1px 1px grey;
+}
+nav > a:link {
+    color: black;
+}
+nav > a:visited {
+    color: black;
+}
+.buttonlike:hover, nav > a:hover {
+    background-color: #FCF6EF;
+}
+.buttonlike:active, nav > a:active {
+    background-color: #DCD6DF;
+    box-shadow: 0px 0px 0px grey;
+}
+.menu table {
+    width: 100%;
+}
 .menu td {
+
     border: 1px solid lightgrey;
     background-color: white;
  }
@@ -13,19 +44,14 @@ div {}
     border: 1px solid black;
     background-color: lightgrey;
 }
-.left {
-    float:left;
-    width:510px;
-    padding:3px;
-    border-right: 1px solid grey;
-}
-.left  #studenttext {
+
+#studenttext {
     position: relative;
     height: 300px;
-    width: 500px;
+    overflow: scroll;
     border: 3px solid #ccc;
 }
-.left #studenttext #originaltext {
+#studenttext #originaltext {
     z-index: 2;
     position: absolute;
     top: 13px;
@@ -33,15 +59,15 @@ div {}
     height: 90%;
     width: 97%;
     font-family: serif;
-    font-size: 10px;
+    font-size: 11px;
     opacity: 0;
     word-wrap: break-word;
     white-space: pre-wrap;
 }
-.left #studenttext #originaltext:active {
+#studenttext #originaltext:active {
     opacity: 0.7;
 }
-.left #studenttext #styledtext {
+#studenttext #styledtext {
     z-index: 1;
     position: absolute;
     top: 13px;
@@ -49,43 +75,52 @@ div {}
     height: 90%;
     width: 97%;
     font-family: serif;
-    font-size: 10px;
+    font-size: 11px;
     word-wrap: break-word;
     white-space: pre-wrap;
 }
-.left #feedbackarea {
+#feedbackarea {
     height: 300px;
-    width: 500px;
+   overflow: scroll;
     border: 3px solid #ccc;
 } 
-.left #feedbackarea form p label input {
-    width: 100px;
-}
-.right {
-    float: right;
-    width: 220px;
-}
 
-.right #errortype {
+.correction {
+    width: 150px;
+}
+.comment {
+    width: 300px;
+}
+#errortype {
     float: left;
     height: 300px;
-    width: 100px;
+    width: 80px;
     border: 3px solid #ccc;
 }
-.right #editaction {
-    float: right;
+#editaction {
+    float: left;
     height: 300px;
-    width: 100px;
+    width: 80px;
     border: 3px solid #ccc;
 }
-.right #errorlist {    
-    clear: both;
-    width: 210px;
+#errorlist {    
+    float: left;
+   
     border: 3px solid #ccc;
 }
 
-.right #registerfeedback {
-
+#registerfeedback {
+float: right;
+}
+#styledpopup {
+    z-index: 1;
+    position: absolute;
+    right: 40;
+    width: 400px;
+    font-family: serif;
+    font-size: 12px;
+    word-wrap: break-word;
+    white-space: pre-wrap;
 }
 .marked {
     color: blue;
@@ -98,6 +133,11 @@ span.error > span.error {
 }
 .errors {
     float: left;x
+}
+/*.buttonlike {
+    background-color: lightblue;
+    border: solid black 1px;
+*/
 }
 .text {
     float: right;

@@ -5,7 +5,8 @@ TODO What to do with overlapping tags?
 TODO Add edit-button to errorlist
 TODO Reset selection upon error creation?
 TODO decrease dependence on glob.variables.  Pass in more parameters to functions.
-I need to re-learn when a passed in object is modified in js.
+Q: I need to re-learn when a passed in object is modified in js.
+   Answer: object are always passed by reference and therefor allways modified.
 TODO decrease coupling between html and js (pass id-attributes to functions).
 Because I don't quite understand when objects are modified my current attempts att decoupling
 are not going well at all
@@ -13,9 +14,11 @@ are not going well at all
 var glob = {
     "name" : "glob",
     "errorArray": [],
-    "currentError":null,
+    "currentError": null,
     "text": null,
     "prefix": null,
+    "teacher": null,
+    "compositionId": null,
     "setDefaultDeadline": function setDefaultDeadline() {
 	var date = new Date(),
 	input = document.getElementById("date_input");
@@ -40,10 +43,15 @@ var glob = {
 	    this.prefix = "";
 	}
     },
+    "setTextFromJson": function setTextFromJson(){
+	var endpoint = "/teacher/compositions/json/",
+	json = this.getJSON(endpoint,String(this.compositionId));
+	this.text = JSON.parse(json).content;
+    },
     "setErrorArray": function setErrorArray() {
 	
-	var endpoint = this.teacher ? '/teacher/compositions' : '/student/compositions',
-	json = this.getJSON(endpoint,"/" + String(this.compositionId) + "/errors");
+	var endpoint = this.teacher ? '/teacher/compositions/' : '/student/compositions/',
+	json = this.getJSON(endpoint,String(this.compositionId) + "/errors");
 	this.errorArray = JSON.parse(json);
     },
     "setTeacher": function setTeacher(teacher) {
@@ -81,9 +89,10 @@ var glob = {
 	this.currentError.type = errorType;
 	this.updateCurrentErrorDisp();
     },
-    //modifies errorArray and call updateErrorList on the new array.
+    //modifies errorArray and calls updateDisplay().
     //The modification consists of pushing currentError and then sorting the
-    //errorArray with sortErrorArray.
+    //errorArray with sortErrorArray. Then currentError is set to null and
+    //updateDisplay is called.
     //TODO check for overlapping errors
     //TODO factor out the updating of the errorArray (push,sort)
     "addActionToErrorStub": function(action) {
@@ -101,7 +110,7 @@ var glob = {
 	this.doIfElement("errortable", "updateErrorList");
 	this.doIfElement("correctionform","updateCorrectionForm");
 	this.doIfElement("currenterror","updateCurrentErrorDisp");
-	this.styleText();
+	this.styleTextArea();
     },
     //Update the currenterror display
     "updateCurrentErrorDisp": function updateCurrentErrorDisp() {
@@ -148,23 +157,26 @@ var glob = {
 	}
 
     },
+    "styleTextArea": function styleTextArea() {
+	var node = document.getElementById("styledtext");
+	node.removeChild(node.firstChild);
+	document.getElementById("styledtext").innerHTML = this.styleText();
+    },
     // Cycle backwards through the error array and wrap error in span tags.
     // TODO generalize the function an allow the class to be passed in a parameter.
-  "styleText": function() {
-      var node = document.getElementById("styledtext"),
-      text2 = "",
-      startend_hsh = {},
-      i,e;
-      for (i = 0; i < this.errorArray.length; i += 1) {
-	  e = this.errorArray[i];
+    "styleText": function() {
+        var text2 = "",
+	startend_hsh = {},
+	i,e;
+	for (i = 0; i < this.errorArray.length; i += 1) {
+	    e = this.errorArray[i];
 	  startend_hsh[e.start] = '<span class="error">';
-	  startend_hsh[e.end] = '</span>';
-      }
-      for (i = 0; i < this.text.length; i += 1) {
-	  text2 = text2 + (startend_hsh[i] || "") + this.text[i];
-      }
-      node.removeChild(node.firstChild);
-      document.getElementById("styledtext").innerHTML = text2;
+	    startend_hsh[e.end] = '</span>';
+	}
+	for (i = 0; i < this.text.length; i += 1) {
+	    text2 = text2 + (startend_hsh[i] || "") + this.text[i];
+	}
+	return text2;
     },
     //take an array of data and return a row with one cell for each item
     //if and index 'i' is given, add a delete-button at the end of the row.
@@ -209,6 +221,39 @@ var glob = {
 	}
 	document.getElementById("feedbackarea").replaceChild(newForm, form);
     },
+    "toggleTextPopup": function toggleTextPopup(id,y) {
+	var div = document.getElementById('styledpopup'); 
+	if (div && id === this.compositionId) {
+	    this.removeTextPopup();
+	} else {
+	    if (div) {
+	    this.removeTextPopup();
+	    this.showTextPopup(id, y);
+	    } else {
+		this.showTextPopup(id,y);
+	    }
+	}
+    },
+    "showTextPopup": function showTextPopup(id, y) {
+	var div = document.getElementById("styledtext"),
+	y_coord = 40 + y,
+	style = "top: " + y_coord + ";",
+	textdiv = document.createElement('div');
+	textdiv.setAttribute('id', 'styledpopup');
+	textdiv.setAttribute('style', style);
+	this.setTeacher(true);
+	this.setCompositionId(id);
+	this.setTextFromJson();
+	this.setErrorArray();
+	textdiv.innerHTML = this.styleText();
+	div.appendChild(textdiv);
+
+    },
+    "removeTextPopup": function removeTextPopup() {
+	var div = document.getElementById("styledtext"),
+	popup = document.getElementById("styledpopup");
+	div.removeChild(popup);
+    },
     //Create form fields for corrections and comments
     "createLabeledInput": function createLabeledInput(label, index, errorArray) {
 	var entry = document.createElement('label'),
@@ -217,6 +262,7 @@ var glob = {
 	element = label.slice(0,label.search(re)).toLowerCase();
 	entry.appendChild(document.createTextNode(label));
 	entry.appendChild(document.createElement('input'));
+	entry.lastChild.setAttribute('class',element);
 	entry.lastChild.setAttribute('name', String(index) + '[' + element + ']');
 	entry.lastChild.setAttribute('type','text');
 	entry.lastChild.setAttribute('onKeyUp',"glob.saveInput(this);");

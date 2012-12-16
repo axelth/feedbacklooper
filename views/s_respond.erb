@@ -1,35 +1,34 @@
-<div class='right'>
-  <table id="errortable">
-    <thead>
-      <tr><th>Nr</th><th>String</th><th>Type</th><th>Action</th><th></th></tr>
-    </thead>
-    <tbody>
-      
-    </tbody>
-  </table>
-  
-  <form id="responseform" action="<%=url('/student/respond')%>" method="post">
-    <table id="feedbacktable">
-    <tbody>
-    <% @errors.each do |e| %>
-      <tr><td>Correction: </td><td><%= e.correction %></td></tr>
-      <tr><td>Comment: </td><td><%= e.comment %></td></tr>
-      <tr><td>Understanding</td><td><select name="<%="#{e.id}[understanding]"%>">
-	    <option value="0" label="disagree">I understand but disagree</option>
-	    <option value="1" label="don't understand">Don't understand</option>
-	    <option value="2" label="think I understand">Think I understand</option>
-	    <option value="3" label="understand &amp; agree">I understand and agree</option>
+<div class="container">
+  <div class="row">
+    <div class='sixcol'>
+      <p id="styledtext"><%= @composition.content %><p>
+    </div>
+    <div class='sixcol last'>
+      <table id="errortable">
+	<thead>
+	  <tr><th>Nr</th><th>String</th><th>Type</th><th>Action</th><th></th></tr>
+	</thead>
+	<tbody></tbody>
+      </table>
+      <form id="responseform" action="<%=url('/student/respond')%>" method="post">
+	<table id="feedbacktable">
+	  <tbody>
+	    <% @errors.each do |e| %>
+	      <tr><td>Correction: </td><td><%= e.correction %></td></tr>
+	      <tr><td>Comment: </td><td><%= e.comment %></td></tr>
+	      <tr><td>Understanding</td><td><select name="<%="#{e.id}[understanding]"%>">
+		    <option value="0" label="disagree">I understand but disagree</option>
+		    <option value="1" label="don't understand">Don't understand</option>
+		    <option value="2" label="think I understand">Think I understand</option>
+		    <option value="3" label="understand &amp; agree">I understand and agree</option>
 
-	  </select></td></tr>
-      <tr><td>Response: </td><td><input type="text" name="<%="#{e.id}[comment]"%>"></td></tr>
-      <%end%>
-  </tbody>
-</table>
-<input type="submit" value="register response">
-  <form>
+		  </select></td></tr>
+	      <tr><td>Response: </td><td><input type="text" name="<%="#{e.id}[comment]"%>"></td></tr>
+	      <%end%>
+	  </tbody>
+	</table>
+	<input type="submit" value="register response">
+	<form>
+    </div>
+  </div>
 </div>
-
-<div class='left'>
-  <p id="styledtext"><%= @composition.content %><p>
-</div>
-

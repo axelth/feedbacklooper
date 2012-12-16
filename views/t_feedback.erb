@@ -1,16 +1,14 @@
-
-    <div class="left">
-      <div id="studenttext">Student's text<br>
+<div class="container">
+  <div class="row">
+    <div class="sixcol">
+      <div id="studenttext"><%=@composition.student.name%>のテクスト<br>
 	<div id="originaltext" onMouseUp="glob.createErrorStub();"><%= @composition.content %></div>
 	<div id="styledtext"><%=@composition.content%></div> 
       </div>
 
-      <div id="feedbackarea">Teachers corrections and comments<br>
-	<form id="correctionform" name="correctionform" action="<%=url('/teacher/feedback/')%><%="#{@composition.id}"%>" method="post">
-	</form>
-      </div>
+      
     </div>
-    <div class="right">
+    <div class="fivcol last">
       <div class="menu" id="errortype">Type of error<br>
 	<table>
 	  <tr><td id="omission" onclick="glob.addTypeToError(this.id);">omission</td></tr>
@@ -40,5 +38,16 @@
 	    <tr><th>Nr</th><th>String</th><th>Type</th><th>Action</th><th></th></tr>
 	  </thead>
 	</table></div>
-      <div id="registerfeedback"><input type="submit" form="correctionform" value="Register feedback"></div>
+
     </div>
+  </div>
+  <div class="row">
+    <div class="twelvecol last">
+      <div id="feedbackarea">Teachers corrections and comments
+	<div id="registerfeedback"><input type="submit" form="correctionform" value="Register feedback"></div><br>
+	<form id="correctionform" name="correctionform" action="<%=url('/teacher/feedback/')%><%="#{@composition.id}"%>" method="post">
+	</form>
+      </div>
+    </div>
+  </div>
+</div>

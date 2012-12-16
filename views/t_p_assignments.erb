@@ -1,6 +1,8 @@
-<ul>
+<table>
+  <tbody>
 <% assignments.each do |a| %>
   <%# The elements of assignments are [assignment,nr_of_compositions] %>
-  <li><%=a[0].title%>: 提出済み作文　<%=a[1]%>, <a href="<%=url('/teacher/assignments/')%><%=a[0].id%>">表示</a></li>
+  <tr><td><%=a[0].title%></td><td><%="#{a[0].description[0..7]}…"%>:</td><td>提出済み作文　<%=a[1]%>本</td><td><a href="<%=url('/teacher/assignments/')%><%=a[0].id%>">表示</a></td>
 <% end %>
-</ul>
+</tbody>
+</table>

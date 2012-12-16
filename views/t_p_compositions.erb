@@ -1,6 +1,7 @@
 <ul>
 <% compositions.each do |c| %>
-  <li>課題：<%=c.assignment.id%>, 作者: <%=c.student.name%> 
+  <li>課題：<%=c.assignment.id%>&nbsp; 作者: <%=c.student.name%>&nbsp;
+    <span class="buttonlike" onclick="glob.toggleTextPopup(<%=c.id%>,document.body.scrollTop);">本文分を表示、非表示</span>&nbsp;
     <a href="<%=url('/teacher/feedback/')%><%=c.id%>">添削する</a></li>
 <% end %>
 </ul>

@@ -1,3 +1,12 @@
-<p><%= "#{@assignment.title}" %></p>
-<p><%= "#{@assignment.description}" %></p>
-<%= partial(:t_p_compositions, {locals: {compositions: @compositions}})%>
+<div class="container">
+  <div class="row">
+    <div class="sixcol">
+      <p><%= "#{@assignment.title}" %></p>
+      <p><%= "#{@assignment.description}" %></p>
+      <%= partial(:t_p_compositions, {locals: {compositions: @compositions}})%>
+    </div>
+    <div class="sixcol last">
+      <div id="styledtext"></div>
+    </div>
+  </div>
+</div>

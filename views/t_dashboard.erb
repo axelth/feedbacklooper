@@ -1,8 +1,17 @@
-<h1>教師のダッシュボード</h1>
-<h2>課題</h2>
-<%= partial(:t_p_assignments, {locals: {assignments: @assignments}}) %>
-<h2>添削されていない作文</h2>
-<%= partial(:t_p_compositions, {locals: {compositions: @compositions}}) %>
-<h2>未読のフィードバック回答</h2>
-<%= partial(:t_p_responses, {locals: {responses: @responses}}) %>
+<div class="container">
+  <div class="row">
+    <div class="sixcol">
+      <h1>教師のダッシュボード</h1>
+	 <h2>課題</h2>
+	 <%= partial(:t_p_assignments, {locals: {assignments: @assignments}}) %>
+	 <h2>添削されていない作文</h2>
+	 <%= partial(:t_p_compositions, {locals: {compositions: @compositions}}) %>
+	 <h2>未読のフィードバック回答</h2>
+	 <%= partial(:t_p_responses, {locals: {responses: @responses}}) %>
+    </div>
+    <div class="sixcol last">
+      <div id="styledtext"></div>
+    </div>
+  </div>
+</div>
 
