@@ -63,12 +63,47 @@ class Errortag
   belongs_to :student
   has n, :responses
 
-  def sentence
+  def sentence_arr
     text = self.composition.content
     sent_start = text.rindex(/[。？?！!\n]/,self.start) || 0
     sent_start += 1 if sent_start > 0
     sent_end = text.index(/[。？?！!\n]/,self.end) || -1
-    text[sent_start..sent_end].strip
+    before = text[sent_start..[(self.start - 1),0].max].strip
+    after = text[self.end..sent_end].strip
+    return [before, self.string, after]
+  end
+  def styled_string(string, class_str)
+    return "<span class=\"#{class_str}\">#{string}</span>"
+  end
+  def styled_line_with_breaks
+    arr = self.sentence_arr
+    if arr.inject(0) {|t,f| t += f.length} <= 25
+      return arr[0] + self.styled_string(arr[1],"error") + arr[2]
+    end
+    pre = [arr[0].length / 25, arr[0].length % 25]
+    post = [arr[2].length / 25, arr[0].length % 25]
+    if pre[0] > 0
+      modifier = 0
+      1.upto(pre[0]) do |i|
+        arr[0].insert((i * 25) + modifier, "<br />")
+        modifier += 6
+      end
+    end
+    modifier = 0
+    if pre[1] + arr[1].length > 25
+      arr[2].prepend('<br />')
+      modifier = 6
+    end
+    if post[0] > 0
+      1.upto(post[0]) do |i|
+        arr[2].insert((i * 25) + modifier, "<br />")
+        modifier += 6
+      end
+    end
+    return arr[0] + self.styled_string(arr[1], "error") + arr[2]
+  end
+  def sentence
+    self.sentence_arr.join("")
   end
 end
 
@@ -220,8 +255,15 @@ class MasterFrontend < Sinatra::Base
     errortags.to_json
   end
   get '/teacher/errors' do
-    @errortags = Errortag.all
-    puts @errortags
+    @errortags = Errortag.all.collect do |e|
+      [Student.get(e.student_id).name,
+       e.type,
+       e.string,
+       e.correction,
+       e.styled_line_with_breaks,
+       Assignment.get(Composition.get(e.composition_id).assignment_id).title]
+      end
+    
     erb :t_errors
   end
   get '/student/dashboard/?' do
