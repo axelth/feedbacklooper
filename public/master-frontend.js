@@ -71,7 +71,13 @@ var glob = {
 	var selection = document.getSelection().getRangeAt(0).cloneRange(),
 	selStart = selection.startOffset,
 	selEnd = selection.endOffset,
-	string = selection.toString();
+	string = selection.toString(),
+	overlapTest = (function(element, index, array) {
+		       return (selStart <= element.end && selEnd >= element.end);});
+	if (this.errorArray !== [] && this.errorArray.some(overlapTest)) {
+	    alert("他のエラーの終了地をまたがる、\nまたは接するエラーを登録できません\n選択し直してください");
+	    return;
+	}
 	this.currentError = this.currentError || {};
 	if (!this.currentError.hasOwnProperty('type')) {
 	    this.currentError = {'start':selStart,
@@ -167,14 +173,22 @@ var glob = {
     "styleText": function() {
         var text2 = "",
 	startend_hsh = {},
-	i,e;
+	zero_length = [],
+	i,e,before,after;
 	for (i = 0; i < this.errorArray.length; i += 1) {
 	    e = this.errorArray[i];
-	  startend_hsh[e.start] = '<span class="error">';
-	    startend_hsh[e.end] = '</span>';
+	    if (e.start === e.end) {
+		zero_length.push(e);
+	    } else {
+		startend_hsh[e.start] = '<span class="error">';
+		startend_hsh[e.end] = '</span>';
+	    }
 	}
 	for (i = 0; i < this.text.length; i += 1) {
 	    text2 = text2 + (startend_hsh[i] || "") + this.text[i];
+	}
+	if (zero_length !== []) {
+	    
 	}
 	return text2;
     },
