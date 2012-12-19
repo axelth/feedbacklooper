@@ -74,21 +74,28 @@ var glob = {
 	string = selection.toString(),
 	overlapTest = (function(element, index, array) {
 		       return (selStart <= element.end && selEnd >= element.end);});
+	// Check for overlapping errors and return early if we find any.
+	// Relies on Array.some so this won't work in older IE etc.
 	if (this.errorArray !== [] && this.errorArray.some(overlapTest)) {
 	    alert("他のエラーの終了地をまたがる、\nまたは接するエラーを登録できません\n選択し直してください");
 	    return;
 	}
+	// No overlap! Let's create the error finally!
+	// First we ensure that we have an object to work with.
 	this.currentError = this.currentError || {};
+	// Then we check if that object is already being worked on.
 	if (!this.currentError.hasOwnProperty('type')) {
+	    // if not, we create a new error object.
 	    this.currentError = {'start':selStart,
 			    'end':selEnd,
 			    'string':string};
-	}
-	else if (window.confirm('Do you wish to change the current error to: ' + string +'?')){
+	// Otherwise, we ask if we should create a new error object.
+	} else if (window.confirm('登録中のエラーを「' + string +'」に変えますか?')) {
 	    this.currentError.start = selStart;
 	    this.currentError.end = selEnd;
 	    this.currentError.string = string;
 	}
+	// Finally we update the current-error display, not the error list!
 	this.updateCurrentErrorDisp();
     },
     "addTypetoError": function addTypeToError(errorType) {
@@ -99,11 +106,10 @@ var glob = {
     //The modification consists of pushing currentError and then sorting the
     //errorArray with sortErrorArray. Then currentError is set to null and
     //updateDisplay is called.
-    //TODO check for overlapping errors
     //TODO factor out the updating of the errorArray (push,sort)
     "addActionToErrorStub": function(action) {
 	if (this.currentError === null) {
-	    window.alert("No error is marked, or marked error is already added to the error list");
+	    window.alert("登録中のエラーがない。\nエラー箇所を選択してください");
 	    return;
 	}
 	this.currentError.action = action;
