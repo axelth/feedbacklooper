@@ -105,6 +105,13 @@ class Errortag
   def sentence
     self.sentence_arr.join("")
   end
+  def trunc_string
+    if @string.length > 7
+      return @string[0..7] + "…"
+    else
+      return @string
+    end
+  end
 end
 
 class Response
