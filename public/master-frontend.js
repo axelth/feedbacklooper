@@ -62,6 +62,8 @@ var glob = {
 				     var temperr = new this.ErrorTag(elt.start,elt.end,elt.string);
 				     temperr.type = elt.type;
 				     temperr.action = elt.action;
+				     temperr.correction = elt.correction;
+				     temperr.comment = elt.comment;
 				     this.errorArray.push(temperr);
 				 }
 , this);
