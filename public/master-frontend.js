@@ -19,6 +19,12 @@ var glob = {
     "prefix": null,
     "teacher": null,
     "compositionId": null,
+    "ErrorTag": function ErrorTag(start, end, string) {
+	this.start = start;
+	this.end = end;
+	this.string = string;
+	//return {"start":start, "end": end, "string":string};
+    },
     "setDefaultDeadline": function setDefaultDeadline() {
 	var date = new Date(),
 	input = document.getElementById("date_input");
@@ -49,10 +55,16 @@ var glob = {
 	this.text = JSON.parse(json).content;
     },
     "setErrorArray": function setErrorArray() {
-	
+	// Retrieve registred errors from the database and add them to the errorArray
 	var endpoint = this.teacher ? '/teacher/compositions/' : '/student/compositions/',
 	json = this.getJSON(endpoint,String(this.compositionId) + "/errors");
-	this.errorArray = JSON.parse(json);
+	JSON.parse(json).forEach(function(elt,index,array) {
+				     var temperr = new this.ErrorTag(elt.start,elt.end,elt.string);
+				     temperr.type = elt.type;
+				     temperr.action = elt.action;
+				     this.errorArray.push(temperr);
+				 }
+, this);
     },
     "setTeacher": function setTeacher(teacher) {
 	this.teacher = teacher;
@@ -66,7 +78,7 @@ var glob = {
 	    this.updateDisplay();
 	}
     },
-    //Create an error object (not properly defined yet) and assign it to currentError
+    //Create create or change error object of currentError, or do nothing if the user wishes
     "createErrorStub": function createErrorStub() {
 	var selection = document.getSelection().getRangeAt(0).cloneRange(),
 	selStart = selection.startOffset,
@@ -86,9 +98,7 @@ var glob = {
 	// Then we check if that object is already being worked on.
 	if (!this.currentError.hasOwnProperty('type')) {
 	    // if not, we create a new error object.
-	    this.currentError = {'start':selStart,
-			    'end':selEnd,
-			    'string':string};
+	    this.currentError = new this.ErrorTag(selStart,selEnd,string);
 	// Otherwise, we ask if we should create a new error object.
 	} else if (window.confirm('登録中のエラーを「' + string +'」に変えますか?')) {
 	    this.currentError.start = selStart;
@@ -137,7 +147,7 @@ var glob = {
 	else {
 	    errorArr = [(currentError['start'] || "-"),
 			(currentError['end'] || "-"),
-			(currentError['string'] || "-"),
+			(currentError.truncString ? currentError.truncString() : "-"),
 			(currentError['type'] || "-"),
 			(currentError['action'] || "-")];//build a data-array for createTblRow
 	    newDisp = document.createElement('table');
@@ -160,7 +170,7 @@ var glob = {
 	for (i = 0; i < this.errorArray.length; i += 1) {
 	    e = this.errorArray[i];
 	    newbody.appendChild(this.createTblRow([String(i + 1),
-						   e['string'],e['type'],e['action']],i));
+						   e.truncString(),e['type'],e['action']],i));
 	}
 	if (oldbody) {
 	    table.replaceChild(newbody,oldbody);	    
@@ -346,3 +356,13 @@ var glob = {
 	}
     }
 };
+// do some setup
+(function() {
+     glob.ErrorTag.prototype.truncString = function() {
+	 if (this.string.length > 7) {
+	     return this.string.substring(0,7) + "…";
+	 } else {
+	     return this.string;					    
+	 }
+     };
+ })();
