@@ -1,7 +1,10 @@
 <div class="container">
   <div class="row">
     <div class="sixcol">
-      <div id="studenttext"><%=@composition.student.name%>のテクスト<br>
+      <div id="compositioninfo">
+	課題：<%=@composition.assignment.title%>，作者：<%=@composition.student.name%>，バーション：<%#バーション情報を表示すること%>
+      </div>
+      <div id="studenttext">
 	<div id="originaltext" onMouseUp="glob.createErrorStub();"><%= @composition.content %></div>
 	<div id="styledtext"><%=@composition.content%></div> 
       </div>
@@ -11,22 +14,26 @@
     <div class="fivcol last">
       <div class="menu" id="errortype">Type of error<br>
 	<table>
-	  <tr><td id="omission" onclick="glob.addTypetoError(this.id);">omission</td></tr>
-	  <tr><td  id="wordorder" onclick="glob.addTypetoError(this.id);">word order</td></tr>
-	  <tr><td id="lexical" onclick="glob.addTypetoError(this.id);">lexical</td></tr>
-	  <tr><td id="register" onclick="glob.addTypetoError(this.id);">register</td></tr>
-	  <tr><td  id="tense" onclick="glob.addTypetoError(this.id);">tense</td></tr>
-	  <tr><td id="voice" onclick="glob.addTypetoError(this.id);">voice</td></tr>
+	  <tr><td id="omission" class="buttonlike" onclick="glob.addTypetoError(this.id);">脱落</td></tr>
+	  <tr><td id="wordorder" class="buttonlike" onclick="glob.addTypetoError(this.id);">語順</td></tr>
+	  <tr><td id="particle" class="buttonlike" onclick="glob.addTypetoError(this.id);">助詞</td></tr>
+	  <tr><td id="lexical" class="buttonlike" onclick="glob.addTypetoError(this.id);">語彙選択</td></tr>
+	  <tr><td id="register" class="buttonlike" onclick="glob.addTypetoError(this.id);">レジスター</td></tr>
+	  <tr><td id="conjugation" class="buttonlike" onclick="glob.addTypetoError(this.id);">活用</td></tr>
+	  <tr><td id="voice" class="buttonlike" onclick="glob.addTypetoError(this.id);">ボイス</td></tr>
+	  <tr><td id="ortography" class="buttonlike" onclick="glob.addTypetoError(this.id);">漢字・仮名</td></tr>
+	  <tr><td id="clarity" class="buttonlike" onclick="glob.addTypetoError(this.id);">意味不明</td></tr>
+	  <tr><td id="superfluous" class="buttonlike" onclick="glob.addTypetoError(this.id);">不必要</td></tr>
 	</table>
       </div>
       <div class="menu" id="editaction">Edit action<br>
 	<table>
-	  <tr><td id="delete" onclick="glob.addActionToErrorStub(this.id);">delete</td></tr>
-	  <tr><td id="replace" onclick="glob.addActionToErrorStub(this.id);">replace</td></tr>
-	  <tr><td id="edit" onclick="glob.addActionToErrorStub(this.id);">edit</td></tr>
-	  <tr><td id="move" onclick="glob.addActionToErrorStub(this.id);">move</td></tr>
-	  <tr><td id="insert" onclick="glob.addActionToErrorStub(this.id);">insert</td></tr>
-	  <tr><td id="mark" onclick="glob.addActionToErrorStub(this.id);">mark</td></tr>
+	  <tr><td id="delete" class="buttonlike" onclick="glob.addActionToErrorStub(this.id);">削除</td></tr>
+	  <tr><td id="replace" class="buttonlike" onclick="glob.addActionToErrorStub(this.id);">置換</td></tr>
+	  <tr><td id="edit" class="buttonlike" onclick="glob.addActionToErrorStub(this.id);">編集</td></tr>
+	  <tr><td id="move" class="buttonlike" onclick="glob.addActionToErrorStub(this.id);">移動</td></tr>
+	  <tr><td id="insert" class="buttonlike" onclick="glob.addActionToErrorStub(this.id);">挿入</td></tr>
+	  <tr><td id="mark" class="buttonlike" onclick="glob.addActionToErrorStub(this.id);">マーク</td></tr>
 	</table>
       </div>
       <div id="errorlist">
