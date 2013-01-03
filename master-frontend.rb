@@ -72,34 +72,40 @@ class Errortag
     after = text[self.end..sent_end].strip
     return [before, self.string, after]
   end
+
   def styled_string(string, class_str)
     return "<span class=\"#{class_str}\">#{string}</span>"
   end
-  def styled_line_with_breaks
+
+  def styled_line_with_breaks(length=25)
+    # arr = [before, error, after]
     arr = self.sentence_arr
-    if arr.inject(0) {|t,f| t += f.length} <= 25
+    if arr.inject(0) {|t,f| t += f.length} <= length
       return arr[0] + self.styled_string(arr[1],"error") + arr[2]
     end
-    pre = [arr[0].length / 25, arr[0].length % 25]
-    post = [arr[2].length / 25, arr[0].length % 25]
+    # Find out how many time length fits  before and after the error
+    pre = [arr[0].length / length, arr[0].length % length]
+    post = [arr[2].length / length, arr[0].length % length]
+    # Insert the correct number of linebreaks
     if pre[0] > 0
       modifier = 0
       1.upto(pre[0]) do |i|
-        arr[0].insert((i * 25) + modifier, "<br />")
+        arr[0].insert((i * length) + modifier, "<br />")
         modifier += 6
       end
     end
     modifier = 0
-    if pre[1] + arr[1].length > 25
+    if pre[1] + arr[1].length > length
       arr[2].prepend('<br />')
       modifier = 6
     end
     if post[0] > 0
       1.upto(post[0]) do |i|
-        arr[2].insert((i * 25) + modifier, "<br />")
+        arr[2].insert((i * length) + modifier, "<br />")
         modifier += 6
       end
     end
+    
     return arr[0] + self.styled_string(arr[1], "error") + arr[2]
   end
   def sentence
