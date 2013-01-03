@@ -7,6 +7,7 @@ h1 {
 }
 h2 {
     margin-top: 4px;
+    font-size: 12pt;
 }
 nav {
     height: 20px;
@@ -132,7 +133,20 @@ span.error > span.error {
     background-color: navajowhite;
 }
 .errors {
-    float: left;x
+    float: left;
+}
+table.s_errors {
+    width: 100%;
+}
+table.s_errors td {
+    border-right: solid black 1px;
+}
+table.s_errors  td.context {
+    width: 50%;
+}
+table.s_errors td.error, table.s_errors td.correction {
+    background: none;
+    width: 25%;
 }
 /*.buttonlike {
     background-color: lightblue;
