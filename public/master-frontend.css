@@ -148,6 +148,12 @@ table.s_errors td.error, table.s_errors td.correction {
     background: none;
     width: 25%;
 }
+#feedbacktable td{
+    border-bottom: dashed black 1px;
+}
+#feedbacktable select{
+    width: 90px;
+}
 /*.buttonlike {
     background-color: lightblue;
     border: solid black 1px;

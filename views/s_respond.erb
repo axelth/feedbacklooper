@@ -1,9 +1,9 @@
 <div class="container">
   <div class="row">
-    <div class='sixcol'>
+    <div class='fourcol'>
       <p id="styledtext"><%= @composition.content %><p>
     </div>
-    <div class='sixcol last'>
+    <div class='eightcol last'>
       <table id="errortable">
 	<thead>
 	  <tr><th>Nr</th><th>String</th><th>Type</th><th>Action</th><th></th></tr>
@@ -12,18 +12,28 @@
       </table>
       <form id="responseform" action="<%=url('/student/respond')%>" method="post">
 	<table id="feedbacktable">
+	  <tr><th>訂正</th><th>コメント</th><th>理解</th><th>同意</th><th>回答</th></tr>
 	  <tbody>
 	    <% @errors.each do |e| %>
-	      <tr><td>Correction: </td><td><%= e.correction %></td></tr>
-	      <tr><td>Comment: </td><td><%= e.comment %></td></tr>
-	      <tr><td>Understanding</td><td><select name="<%="#{e.id}[understanding]"%>">
-		    <option value="0" label="disagree">I understand but disagree</option>
-		    <option value="1" label="don't understand">Don't understand</option>
-		    <option value="2" label="think I understand">Think I understand</option>
-		    <option value="3" label="understand &amp; agree">I understand and agree</option>
-
-		  </select></td></tr>
-	      <tr><td>Response: </td><td><input type="text" name="<%="#{e.id}[comment]"%>"></td></tr>
+	      <tr>
+		<td class="corrections"><%= e.correction %></td>
+		<td class="comment"><%= e.comment %></td>
+		<td class="understanding"><select name="<%="#{e.id}[understanding]"%>">
+		    <option value="1" label="1">I understand but disagree</option>
+		    <option value="2" label="2">Don't understand</option>
+		    <option value="3" label="3">Think I understand</option>
+		    <option value="4" label="4">I understand and agree</option>
+		  </select></td>
+		<td class="agreement"><select name="<%="#{e.id}[agreement]"%>">
+		    <option value="1" label="1">disagree</option>
+		    <option value="2" label="2">slightly disagree</option>
+		    <option value="3" label="3">neither disagree nor agree</option>
+		    <option value="4" label="4">think I agree</option>
+		    <option value="5" label="5">agree</option>
+		  </select></td>
+		<%# The name of the field below must be changed to response here and in the model%>
+		<td class="response"><input type="text" name="<%="#{e.id}[response]"%>"></td>
+	      </tr>
 	      <%end%>
 	  </tbody>
 	</table>

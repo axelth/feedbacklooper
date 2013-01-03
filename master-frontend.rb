@@ -129,7 +129,8 @@ class Response
   property :id, Serial
   property :understanding, String, :required => true
   # I must change the name of this property to "response" here and in the view
-  property :comment, String
+  property :agreement, String, :required => true
+  property :response, String
   property :viewed, Boolean, :default => false
   
   belongs_to :errortag
