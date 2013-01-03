@@ -186,20 +186,30 @@ var glob = {
 	node.removeChild(node.firstChild);
 	document.getElementById("styledtext").innerHTML = this.styleText();
     },
-    // Cycle backwards through the error array and wrap error in span tags.
+    // Cycle through the error array and wrap error in span tags.
     // TODO generalize the function an allow the class to be passed in a parameter.
     "styleText": function() {
         var text2 = "",
-	startend_hsh = {},
+	startend_hsh = {"add":function(name,value) {
+			if (this[name]) {
+			    this[name] += value;
+			} else {
+			    this[name] = value;
+			}
+			}
+		       },
+	start_tag = '<span class="error">',
+	end_tag = '</span>',
+	zero_tag = '<span style="color:red;">|</span>',
 	zero_length = [],
 	i,e,before,after;
 	for (i = 0; i < this.errorArray.length; i += 1) {
 	    e = this.errorArray[i];
 	    if (e.start === e.end) {
-		zero_length.push(e);
+		startend_hsh.add(e.start,zero_tag);
 	    } else {
-		startend_hsh[e.start] = '<span class="error">';
-		startend_hsh[e.end] = '</span>';
+		startend_hsh.add(e.start, start_tag);
+		startend_hsh.add(e.end, end_tag);
 	    }
 	}
 	for (i = 0; i < this.text.length; i += 1) {
@@ -208,10 +218,11 @@ var glob = {
 	if (zero_length !== []) {
 	    
 	}
+	console.log(text2);
 	return text2;
     },
     //take an array of data and return a row with one cell for each item
-    //if and index 'i' is given, add a delete-button at the end of the row.
+    //if and index 'i' is given and this.teacher is true, add a delete-button at the end of the row.
     //TODO factor out the button creation code.
     "createTblRow": function createTblRow(data,i) {
 	var newrow = document.createElement('tr'),
