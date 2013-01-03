@@ -108,6 +108,10 @@ class Errortag
     
     return arr[0] + self.styled_string(arr[1], "error") + arr[2]
   end
+  def styled_line_no_breaks
+    arr = self.sentence_arr
+    return arr[0] + self.styled_string(arr[1], "error") + arr[2]
+  end
   def sentence
     self.sentence_arr.join("")
   end
