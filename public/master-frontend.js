@@ -87,11 +87,12 @@ var glob = {
 	selEnd = selection.endOffset,
 	string = selection.toString(),
 	overlapTest = (function(element, index, array) {
-		       return (selStart <= element.end && selEnd >= element.end);});
+		       return ((selStart < element.end && selEnd > element.end) ||
+			      (selStart < element.start && selEnd > element.start && selEnd < element.end));});
 	// Check for overlapping errors and return early if we find any.
 	// Relies on Array.some so this won't work in older IE etc.
 	if (this.errorArray !== [] && this.errorArray.some(overlapTest)) {
-	    alert("他のエラーの終了地をまたがる、\nまたは接するエラーを登録できません\n選択し直してください");
+	    alert("他のエラーの開始・終了地をまたがるエラーが登録できません\n選択し直してください");
 	    return;
 	}
 	// No overlap! Let's create the error finally!
