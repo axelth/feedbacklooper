@@ -58,6 +58,7 @@ var glob = {
 	// Retrieve registred errors from the database and add them to the errorArray
 	var endpoint = this.teacher ? '/teacher/compositions/' : '/student/compositions/',
 	json = this.getJSON(endpoint,String(this.compositionId) + "/errors");
+	this.errorArray = [];
 	JSON.parse(json).forEach(function(elt,index,array) {
 				     var temperr = new this.ErrorTag(elt.start,elt.end,elt.string);
 				     temperr.type = elt.type;
@@ -281,7 +282,7 @@ var glob = {
     "showTextPopup": function showTextPopup(id, y) {
 	var div = document.getElementById("styledtext"),
 	y_coord = 40 + y,
-	style = "top: " + y_coord + ";",
+	style = "top: " + y_coord + "px;",
 	textdiv = document.createElement('div');
 	textdiv.setAttribute('id', 'styledpopup');
 	textdiv.setAttribute('style', style);
