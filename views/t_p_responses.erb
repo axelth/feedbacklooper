@@ -1,6 +1,6 @@
 <ul>
   <% responses.each do |r| %>
-   <li> <%=sprintf("学習者：%s，エラー：%s，訂正：%s，理解度：%d，コメント：%s",
-	       r.student_id,r.errortag.string,r.errortag.correction,r.understanding,r.comment)%></li>
+   <li> <%=sprintf("学習者：%s，エラー：%s，訂正：%s，理解度：%d，同意度：%d, コメント：%s",
+	       r.student.name,r.errortag.string,r.errortag.correction,r.understanding,r.agreement,r.comment)%></li>
   <% end %>
 </ul>
