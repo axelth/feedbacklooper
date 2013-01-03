@@ -1,5 +1,6 @@
-<ul>
+<table>
+  <tr><th>課題題目</th><th>説明</th><th></th></tr>
 <% assignments.each do |a|%>
-<li>課題：<%=a.title%>, <a href="<%=url('/student/compositions/new/')%><%=a.id%>"> 作文を作成 </a></li>
+  <tr><td><%=a.title%></td><td><%=a.description%></td><td><a href="<%=url('/student/compositions/new/')%><%=a.id%>"> 作文を作成 </a></td></tr>
 <% end %>
-</ul>
+</table>
