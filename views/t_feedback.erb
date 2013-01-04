@@ -8,9 +8,8 @@
 	<div id="originaltext" onMouseUp="glob.createErrorStub();"><%= @composition.content %></div>
 	<div id="styledtext"><%=@composition.content%></div> 
       </div>
-
-      
     </div>
+
     <div class="fivcol last">
       <div class="menu" id="errortype" onclick="glob.typeMenuClick(window.event.target);">Type of error<br>
 	<table>
@@ -48,11 +47,13 @@
 
     </div>
   </div>
+
   <div class="row">
     <div class="twelvecol last">
-      <div id="feedbackarea" onKeyUp="glob.correctionformKeyUp(window.event.target);">Teachers corrections and comments
-	<div id="registerfeedback"><input type="submit" form="correctionform" value="Register feedback"></div><br>
-	<form id="correctionform" name="correctionform" action="<%=url('/teacher/feedback/')%><%="#{@composition.id}"%>" method="post">
+      <div id="feedbackarea" onKeyUp="glob.correctionformKeyUp(window.event.target);">
+	<h2>訂正とコメント</h2>
+	<div id="registerfeedback"><input type="submit" form="correctionform" value="フィードバックを登録"></div><br>
+	<form id="correctionform" name="correctionform" action="<%=url('/teacher/feedback/')%><%="#{@composition.id}"%>" method="post"><%# フォームの内容はJSで生成される%>
 	</form>
       </div>
     </div>

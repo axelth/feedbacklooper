@@ -1,7 +1,18 @@
-<form name="new_assignment" action="<%=url('/teacher/assignment')%>" method="post">
-  <label>課題名<input type="text" name="title"></label><br />
-  <label>締め切り<input id="date_input" type="date" name="date"></label><br />
-  <label>課題説明<textarea name="description"></textarea></label><br />
-  <input type="submit" value="課題を登録">
-</form>
-<script>glob.setDefaultDeadline();</script>
+<div class="container bordered">
+  <div class="row">
+    <form name="new_assignment" action="<%=url('/teacher/assignment')%>" method="post">
+      <div class="threecol">
+
+	<label>課題名<input type="text" name="title"></label><br />
+	<label>締め切り<input id="date_input" type="date" name="date"></label>
+      </div>
+      <div class="eightcol last">
+	<label>課題説明<textarea id="assignmentdescriptioninput" name="description"></textarea></label><br />
+	<input type="submit" value="課題を登録">
+      </div>
+
+    </form>
+    
+    <script>glob.setDefaultDeadline();</script>
+  </div>
+</div>
