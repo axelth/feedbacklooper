@@ -50,7 +50,8 @@ nav > a:visited {
     position: relative;
     height: 300px;
     overflow: scroll;
-    border: 3px solid #ccc;
+    border-top: 3px solid #ccc;
+    border-right: 3px solid #ccc;
 }
 #studenttext #originaltext {
     z-index: 2;
@@ -80,36 +81,38 @@ nav > a:visited {
     word-wrap: break-word;
     white-space: pre-wrap;
 }
-#feedbackarea {
-    height: 300px;
-   overflow: scroll;
-    border: 3px solid #ccc;
-} 
 
-.correction {
+#feedbackarea {
+    height: 250px;
+   overflow: scroll;
+    border-top: 3px solid #ccc;
+} 
+#feedbackarea .correction {
     width: 150px;
 }
-.comment {
+#feedbackarea .comment {
     width: 300px;
 }
+#registerfeedback {
+float: right;
+}
+
 #errortype, #editaction{
     float: left;
     height: 100%;
     width: 80px;
-    border-top: 3px solid #ccc;
     border-bottom: 3px solid #ccc;
     border-left: 2px solid #ccc;
     border-right: 1px solid #ccc;
 }
 #errorlist {    
     float: left;
-   
-    border: 3px solid #ccc;
+    border-right: 3px solid #ccc;
+    border-left: 2px solid #ccc;
+    border-bottom: 3px solid #ccc;
 }
 
-#registerfeedback {
-float: right;
-}
+
 #styledpopup {
     z-index: 1;
     position: absolute;
@@ -120,17 +123,15 @@ float: right;
     word-wrap: break-word;
     white-space: pre-wrap;
 }
-.marked {
-    color: blue;
-}
+
 .error {
     background-color: lightgrey;
 }
 span.error > span.error {
     background-color: navajowhite;
 }
-.errors {
-    float: left;
+
+/* begin: s_respond.erb */
 }
 table.s_errors {
     width: 100%;
@@ -151,11 +152,20 @@ table.s_errors td.error, table.s_errors td.correction {
 #feedbacktable select{
     width: 90px;
 }
-/*.buttonlike {
-    background-color: lightblue;
-    border: solid black 1px;
-*/
+/* end: s_respond.erb*/
+
+
+.bordered {
+    border: 3px solid #ccc;   
+}
+
+/* not used?
+.marked {
+    color: blue;
+}
+.errors {
 }
 .text {
     float: right;
-}
+}    float: left;
+*/

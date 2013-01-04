@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container bordered">
   <div class="row">
     <div class="sixcol">
       <div id="compositioninfo">
@@ -12,28 +12,28 @@
       
     </div>
     <div class="fivcol last">
-      <div class="menu" id="errortype">Type of error<br>
+      <div class="menu" id="errortype" onclick="glob.typeMenuClick(window.event.target);">Type of error<br>
 	<table>
-	  <tr><td id="omission" class="buttonlike" onclick="glob.addTypetoError(this.id);">脱落</td></tr>
-	  <tr><td id="wordorder" class="buttonlike" onclick="glob.addTypetoError(this.id);">語順</td></tr>
-	  <tr><td id="particle" class="buttonlike" onclick="glob.addTypetoError(this.id);">助詞</td></tr>
-	  <tr><td id="lexical" class="buttonlike" onclick="glob.addTypetoError(this.id);">語彙選択</td></tr>
-	  <tr><td id="register" class="buttonlike" onclick="glob.addTypetoError(this.id);">レジスター</td></tr>
-	  <tr><td id="conjugation" class="buttonlike" onclick="glob.addTypetoError(this.id);">活用</td></tr>
-	  <tr><td id="voice" class="buttonlike" onclick="glob.addTypetoError(this.id);">ボイス</td></tr>
-	  <tr><td id="ortography" class="buttonlike" onclick="glob.addTypetoError(this.id);">漢字・仮名</td></tr>
-	  <tr><td id="clarity" class="buttonlike" onclick="glob.addTypetoError(this.id);">意味不明</td></tr>
-	  <tr><td id="superfluous" class="buttonlike" onclick="glob.addTypetoError(this.id);">不必要</td></tr>
+	  <tr><td id="omission" class="buttonlike">脱落</td></tr>
+	  <tr><td id="wordorder" class="buttonlike">語順</td></tr>
+	  <tr><td id="particle" class="buttonlike">助詞</td></tr>
+	  <tr><td id="lexical" class="buttonlike">語彙選択</td></tr>
+	  <tr><td id="register" class="buttonlike">レジスター</td></tr>
+	  <tr><td id="conjugation" class="buttonlike">活用</td></tr>
+	  <tr><td id="voice" class="buttonlike">ボイス</td></tr>
+	  <tr><td id="ortography" class="buttonlike">漢字・仮名</td></tr>
+	  <tr><td id="clarity" class="buttonlike">意味不明</td></tr>
+	  <tr><td id="superfluous" class="buttonlike">不必要</td></tr>
 	</table>
       </div>
-      <div class="menu" id="editaction">Edit action<br>
+      <div class="menu" id="editaction" onclick="glob.actionMenuClick(window.event.target);">Edit action<br>
 	<table>
-	  <tr><td id="delete" class="buttonlike" onclick="glob.addActionToErrorStub(this.id);">削除</td></tr>
-	  <tr><td id="replace" class="buttonlike" onclick="glob.addActionToErrorStub(this.id);">置換</td></tr>
-	  <tr><td id="edit" class="buttonlike" onclick="glob.addActionToErrorStub(this.id);">編集</td></tr>
-	  <tr><td id="move" class="buttonlike" onclick="glob.addActionToErrorStub(this.id);">移動</td></tr>
-	  <tr><td id="insert" class="buttonlike" onclick="glob.addActionToErrorStub(this.id);">挿入</td></tr>
-	  <tr><td id="mark" class="buttonlike" onclick="glob.addActionToErrorStub(this.id);">マーク</td></tr>
+	  <tr><td id="delete" class="buttonlike">削除</td></tr>
+	  <tr><td id="replace" class="buttonlike">置換</td></tr>
+	  <tr><td id="edit" class="buttonlike">編集</td></tr>
+	  <tr><td id="move" class="buttonlike">移動</td></tr>
+	  <tr><td id="insert" class="buttonlike">挿入</td></tr>
+	  <tr><td id="mark" class="buttonlike">マーク</td></tr>
 	</table>
       </div>
       <div id="errorlist">
@@ -50,7 +50,7 @@
   </div>
   <div class="row">
     <div class="twelvecol last">
-      <div id="feedbackarea">Teachers corrections and comments
+      <div id="feedbackarea" onKeyUp="glob.correctionformKeyUp(window.event.target);">Teachers corrections and comments
 	<div id="registerfeedback"><input type="submit" form="correctionform" value="Register feedback"></div><br>
 	<form id="correctionform" name="correctionform" action="<%=url('/teacher/feedback/')%><%="#{@composition.id}"%>" method="post">
 	</form>

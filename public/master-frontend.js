@@ -77,7 +77,7 @@ var glob = {
 	this.setText();
 	this.setTeacher(teacher);
 	this.setErrorArray();
-	if (this.errorArray !== []) {
+	if (this.errorArray.length !== 0) {
 	    this.updateDisplay();
 	}
     },
@@ -112,25 +112,39 @@ var glob = {
 	// Finally we update the current-error display, not the error list!
 	this.updateCurrentErrorDisp();
     },
+    "typeMenuClick": function(target) {
+	if (target.tagName == "TD") {
+	    this.addTypetoError(target.id);
+	}
+    },
     "addTypetoError": function addTypeToError(errorType) {
-	this.currentError.type = errorType;
-	this.updateCurrentErrorDisp();
+	try{
+	    this.currentError.type = errorType;
+	    this.updateCurrentErrorDisp();
+	} catch (e) {
+	    window.alert("登録中のエラーがない。\nエラー箇所を選択してください");
+	}
     },
     //modifies errorArray and calls updateDisplay().
     //The modification consists of pushing currentError and then sorting the
     //errorArray with sortErrorArray. Then currentError is set to null and
     //updateDisplay is called.
     //TODO factor out the updating of the errorArray (push,sort)
-    "addActionToErrorStub": function(action) {
-	if (this.currentError === null) {
-	    window.alert("登録中のエラーがない。\nエラー箇所を選択してください");
-	    return;
+    "actionMenuClick": function(target) {
+	if (target.tagName == "TD") {
+	    this.addActionToErrorStub(target.id);
 	}
-	this.currentError.action = action;
-	this.errorArray.push(this.currentError);
-	this.sortErrorArray(this.errorArray);
-	this.currentError = null;
-	this.updateDisplay();
+    },
+    "addActionToErrorStub": function(action) {
+	try{
+	    this.currentError.action = action;
+	    this.errorArray.push(this.currentError);
+	    this.sortErrorArray(this.errorArray);
+	    this.currentError = null;
+	    this.updateDisplay();    
+	} catch (x) {
+	    window.alert("登録中のエラーがない。\nエラー箇所を選択してください");
+	}
     },
     "updateDisplay": function updateDisplay() {
 	this.doIfElement("errortable", "updateErrorList");
@@ -220,7 +234,7 @@ var glob = {
 	if (zero_length !== []) {
 	    
 	}
-	console.log(text2);
+	//console.log(text2);
 	return text2;
     },
     //take an array of data and return a row with one cell for each item
@@ -310,7 +324,7 @@ var glob = {
 	entry.lastChild.setAttribute('class',element);
 	entry.lastChild.setAttribute('name', String(index) + '[' + element + ']');
 	entry.lastChild.setAttribute('type','text');
-	entry.lastChild.setAttribute('onKeyUp',"glob.saveInput(this);");
+//	entry.lastChild.setAttribute('onKeyUp',"glob.saveInput(this);");
 	if (errorArray[index][element] !== undefined) {
 	    entry.lastChild.setAttribute('value', errorArray[index][element]);
 	}
@@ -324,6 +338,11 @@ var glob = {
 	return element;
     },
     //Continually save corrections and comments to the corresponding error in errorArray
+    "correctionformKeyUp": function(element) {
+	if(element.tagName == "INPUT" && element.type == "text") {
+	    this.saveInput(element);
+	}
+    },
     "saveInput": function saveInput(input) {
 	var name = input.name,
 	attribute = name.slice(name.indexOf('[') + 1,name.indexOf(']')),
