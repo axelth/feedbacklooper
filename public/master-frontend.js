@@ -269,8 +269,8 @@ var glob = {
 	for (e = 0; e < errorArray.length; e += 1) {
 	    p = document.createElement('p');
 	    p.appendChild(document.createTextNode('Error ' + String(e + 1) + ":"));
-	    p.appendChild(this.createLabeledInput('Correction:', e, errorArray));
-	    p.appendChild(this.createLabeledInput('Comment:', e, errorArray));
+	    p.appendChild(this.createLabeledInput('訂正:', 'correction', e, errorArray));
+	    p.appendChild(this.createLabeledInput('コメント:', 'comment', e, errorArray));
 	    p.appendChild(this.createHidden('start',e,errorArray));
 	    p.appendChild(this.createHidden('end',e,errorArray));
 	    p.appendChild(this.createHidden('type',e,errorArray));
@@ -314,19 +314,19 @@ var glob = {
 	div.removeChild(popup);
     },
     //Create form fields for corrections and comments
-    "createLabeledInput": function createLabeledInput(label, index, errorArray) {
+    "createLabeledInput": function createLabeledInput(label, property, index, errorArray) {
 	var entry = document.createElement('label'),
 	re = /[0-9]/,
 	// use re to get the name of the label without the number
 	element = label.slice(0,label.search(re)).toLowerCase();
 	entry.appendChild(document.createTextNode(label));
 	entry.appendChild(document.createElement('input'));
-	entry.lastChild.setAttribute('class',element);
-	entry.lastChild.setAttribute('name', String(index) + '[' + element + ']');
+	entry.lastChild.setAttribute('class',property);
+	entry.lastChild.setAttribute('name', String(index) + '[' + property + ']');
 	entry.lastChild.setAttribute('type','text');
 //	entry.lastChild.setAttribute('onKeyUp',"glob.saveInput(this);");
-	if (errorArray[index][element] !== undefined) {
-	    entry.lastChild.setAttribute('value', errorArray[index][element]);
+	if (errorArray[index][property] !== undefined) {
+	    entry.lastChild.setAttribute('value', errorArray[index][property]);
 	}
 	return entry;
     },
