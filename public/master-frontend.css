@@ -146,15 +146,37 @@ table.s_errors td.error, table.s_errors td.correction {
     background: none;
     width: 25%;
 }
-#feedbacktable td{
+#feedbacktable {
+    width: 100%;
+}
+#feedbacktable td {
     border-bottom: dashed black 1px;
 }
-#feedbacktable select{
-    width: 90px;
+#feedbacktable td.corrections {
+    width: 15%;
 }
+#feedbacktable td.comment {
+    width: 35%;
+}
+#feedbacktable td.understanding, #feedbacktable td.agreement {
+    width: 7%;
+}
+#feedbacktable td.response {
+    width: 35%;
+}
+#feedbacktable td.response > input {
+    width: 100%;
+}
+/*#feedbacktable select{
+    width: 50px;
+}*/
 /* end: s_respond.erb*/
 
+#studenttextinput, #assignmentdescriptioninput {
+    width: 500px;
+    height: 400px;
 
+}
 .bordered {
     border: 3px solid #ccc;   
 }
