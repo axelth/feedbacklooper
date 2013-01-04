@@ -1,10 +1,10 @@
 <div class"container">
   <div class="row">
-    <div class="sixcol">
+    <div class="fourcol">
       <h2> 未提出の課題</h2>
       <%= partial(:s_p_assignments, {locals: {assignments: @assignments}})%>
     </div>
-    <div class="sixcol last">
+    <div class="sevencol last">
       <h2>提出済みの課題</h2>
       <%= partial(:s_p_compositions, {locals: {feedback: @feedback,compositions: @compositions}})%>
     </div>

@@ -1,13 +1,16 @@
 <ul>
 <% compositions.each do |c| %>
-  <li>課題<%=c.assignment.title%>の<a href="<%=url('/student/respond/')%><%=c.id%>">フィードバックに回答する</a>
+  <li>課題<%=c.assignment.title%>の
     <% errors = feedback.select {|e| e.composition == c} %>
-  <% if errors && errors.length > 0 %>
+  <% if errors && errors.length > 0 && errors.first.responses.empty?%>
+    <a href="<%=url('/student/respond/')%><%=c.id%>">フィードバックに回答する</a>
     <table class="s_errors">
       <% errors.each do |e| %>
 	<tr><td class="context"><%=e.styled_line_no_breaks%></td><td class="error"><%= e.string %></td><td class="correction"><%= e.correction %></td></tr>
       <% end %>
     </table>
+  <% else %>
+    <a href="<%=url('/student/respond/')%><%=c.id%>">作文を見る</a>
   <% end %>
   </li>
 <% end %>

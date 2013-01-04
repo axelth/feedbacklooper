@@ -3,7 +3,7 @@
     <div class='fourcol'>
       <p id="styledtext"><%= @composition.content %><p>
     </div>
-    <div class='eightcol last'>
+    <div class='sevencol last'>
       <table id="errortable">
 	<thead>
 	  <tr><th>Nr</th><th>String</th><th>Type</th><th>Action</th><th></th></tr>
@@ -19,10 +19,10 @@
 		<td class="corrections"><%= e.correction %></td>
 		<td class="comment"><%= e.comment %></td>
 		<td class="understanding"><select name="<%="#{e.id}[understanding]"%>">
-		    <option value="1" label="1">I understand but disagree</option>
-		    <option value="2" label="2">Don't understand</option>
+		    <option value="1" label="1">Don't understand</option>
+		    <option value="2" label="2">Unsure</option>
 		    <option value="3" label="3">Think I understand</option>
-		    <option value="4" label="4">I understand and agree</option>
+		    <option value="4" label="4">I understand</option>
 		  </select></td>
 		<td class="agreement"><select name="<%="#{e.id}[agreement]"%>">
 		    <option value="1" label="1">disagree</option>
@@ -37,7 +37,7 @@
 	      <%end%>
 	  </tbody>
 	</table>
-	<input type="submit" value="register response">
+	<input type="submit" value="回答を登録する">
 	<form>
     </div>
   </div>
