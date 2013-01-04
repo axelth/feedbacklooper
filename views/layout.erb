@@ -20,7 +20,7 @@
     <link rel="stylesheet" type="text/css" href="<%=url('/master-frontend.css')%>">
   </head>
   <body onload="glob.setPrefix();<%= defined?(@composition) ? "glob.compositionPageSetup(#{@composition.id},#{session[:usertype] == 'Teacher'});" : '' %>">
-<%=session[:usertype] == 'Teacher' ? partial(:t_p_navbar): ''%>
+<%=session[:usertype] == 'Teacher' ? partial(:t_p_navbar): partial(:s_p_navbar)%>
     <%= yield %>
   </body>
 </html>
