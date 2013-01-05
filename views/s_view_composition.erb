@@ -1,0 +1,38 @@
+<div class="container">
+  <div class="row bordered">
+    <div class="fivecol">
+      <div id="styledtext"><%= @composition.content %><%# the content filling has to go on the same line as the block tag. For some reason%>
+      </div>
+    </div>
+    <div class="sixcol last">
+      <% unless @errors.empty? %>
+	<h2>作文のフィードバック</h2>
+	<table id="errortable">
+	  <thead>
+	    <tr><th>Nr</th><th>String</th><th>Type</th><th>Action</th><th></th></tr>
+	  </thead>
+	</table>
+      <% end %>
+      <% unless @responses.empty? %>
+	<h2>フィードバックと回答</h2>
+	<table id="feedbacktable">
+	  <thead>
+	    <tr><th>Nr</th><th>訂正</th><th>コメント</th><th>理解</th><th>同意</th><th>回答</th></tr>
+	  </thead>
+	  <tbody>
+	  <% @responses.each_with_index do |r,i| %>
+	    <tr>
+	      <td><%=(i + 1).to_s%></td>
+	      <td class="corrections"><%= @errors[i].correction %></td>
+	      <td class="comment"><%= @errors[i].comment %></td>
+	      <td class="understanding"><%=r.understanding.to_s%></td>
+	      <td class="agreement"><%=r.agreement.to_s%></td>
+	      <td class="response"><%=r.response%></td>
+	    </tr>
+	  <% end %>
+	  </tbody>
+	</table>
+      <% end %>
+    </div>
+  </div>
+</div>
