@@ -212,6 +212,10 @@ class MasterFrontend < Sinatra::Base
       redirect to '/login'
     end
   end
+  get '/logout' do
+    session.clear
+    redirect to '/login'
+  end
   get '/teacher/dashboard/?' do
     @assignments = Assignment.all.collect do |a|
       [a, Composition.all(assignment: a).length]
@@ -274,15 +278,21 @@ class MasterFrontend < Sinatra::Base
   end
   get '/teacher/errors' do
     @errortags = Errortag.all.collect do |e|
-      [Student.get(e.student_id).name,
-       e.type,
-       e.string,
-       e.correction,
-       e.styled_line_with_breaks,
-       Assignment.get(Composition.get(e.composition_id).assignment_id).title]
+      struct = Struct.new(:name,:type,:string,:correction,:context,:title)
+      struct.new(Student.get(e.student_id).name,
+                 e.type,
+                 e.string,
+                 e.correction,
+                 e.styled_line_no_breaks,
+                 Assignment.get(Composition.get(e.composition_id).assignment_id).title)
       end
     
     erb :t_errors
+  end
+  get '/teacher/students' do
+    @students = Students.all
+    @errors = Errortag.all
+    
   end
   get '/student/dashboard/?' do
     @student = Student.get(session[:student_id])
@@ -305,7 +315,10 @@ class MasterFrontend < Sinatra::Base
 # rewrite s_respond to be a partial that give only the response form
 # draw them together with the composition if there is feedback to respond to
   get '/student/composition/:id' do
-    return "作文を表示するページ"
+    @composition = Composition.get(params[:id])
+    @errors = @composition.errortags
+    @responses = Response.all(:errortag => @errors)
+    erb :s_view_composition
   end
   get '/student/respond/:id' do
     @composition = Composition.get(params[:id])

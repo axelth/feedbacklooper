@@ -81,7 +81,10 @@ nav > a:visited {
     word-wrap: break-word;
     white-space: pre-wrap;
 }
-
+#styledtext {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
 #feedbackarea {
     height: 250px;
    overflow: scroll;
@@ -146,19 +149,19 @@ table.s_errors td.error, table.s_errors td.correction {
     background: none;
     width: 25%;
 }
-#feedbacktable {
+#feedbacktable, #responsetable {
     width: 100%;
 }
-#feedbacktable td {
+#allerrortable td, #feedbacktable td, #responsetable td {
     border-bottom: dashed black 1px;
 }
-#feedbacktable td.corrections {
+#allerrortable td.correction, #allerrortable td.string, #feedbacktable td.correction {
     width: 15%;
 }
 #feedbacktable td.comment {
     width: 35%;
 }
-#feedbacktable td.understanding, #feedbacktable td.agreement {
+#allerrortable td.title, #allerrortable td.name, #allerrortable td.type, #feedbacktable td.understanding, #feedbacktable td.agreement {
     width: 7%;
 }
 #feedbacktable td.response {
@@ -180,7 +183,21 @@ table.s_errors td.error, table.s_errors td.correction {
 .bordered {
     border: 3px solid #ccc;   
 }
-
+.bordertlr {
+    border-top: 3px solid #ccc;
+    border-left: 3px solid #ccc;
+    border-right: 3px solid #ccc;
+}
+.borderblr {
+    border-bottom: 3px solid #ccc;
+    border-left: 3px solid #ccc;
+    border-right: 3px solid #ccc;
+}
+.visiblediv {
+    margin: 5px;
+    position: fixed;
+    
+}
 /* not used?
 .marked {
     color: blue;

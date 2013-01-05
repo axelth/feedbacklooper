@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="row">
+  <div class="row bordered">
     <div class='fourcol'>
       <p id="styledtext"><%= @composition.content %><p>
     </div>
@@ -16,7 +16,7 @@
 	  <tbody>
 	    <% @errors.each do |e| %>
 	      <tr>
-		<td class="corrections"><%= e.correction %></td>
+		<td class="correction"><%= e.correction %></td>
 		<td class="comment"><%= e.comment %></td>
 		<td class="understanding"><select name="<%="#{e.id}[understanding]"%>">
 		    <option value="1" label="1">Don't understand</option>
@@ -31,7 +31,6 @@
 		    <option value="4" label="4">think I agree</option>
 		    <option value="5" label="5">agree</option>
 		  </select></td>
-		<%# The name of the field below must be changed to response here and in the model%>
 		<td class="response"><input type="text" name="<%="#{e.id}[response]"%>"></td>
 	      </tr>
 	      <%end%>

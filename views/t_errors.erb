@@ -1,13 +1,20 @@
 <div class="container">
   <div class="row">
     <div class="twelvecol">
-      <table>
+      <table id="allerrortable">
 	<thead>
 	  <tr><th>学習者</th><th>type</th><th>エラー</th><th>訂正</th><th>文</th><th>課題</th></tr>
 	</thead>
 	<tbody>
 	  <% @errortags.each do |e| %>
-	    <tr><td><%=e[0]%></td><td><%=e[1]%></td><td><%=e[2]%></td><td><%=e[3]%></td><td><%=e[4]%></td><td><%=e[5]%></td></tr>
+	    <tr>
+	      <td class="name"><%=e.name%></td>
+	      <td class="type"><%=e.type%></td>
+	      <td class="string"><%=e.string%></td>
+	      <td class="correction"><%=e.correction%></td>
+	      <td class="context"><%=e.context%></td>
+	      <td class="title"><%=e.title%></td>
+	    </tr>
 	  <% end %>
 	</tbody>
       </table>

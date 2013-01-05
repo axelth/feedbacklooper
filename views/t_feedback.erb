@@ -1,5 +1,5 @@
-<div class="container bordered">
-  <div class="row">
+<div class="container">
+  <div class="row bordertlr">
     <div class="sixcol">
       <div id="compositioninfo">
 	課題：<%=@composition.assignment.title%>，作者：<%=@composition.student.name%>，バーション：<%#バーション情報を表示すること%>
@@ -48,7 +48,7 @@
     </div>
   </div>
 
-  <div class="row">
+  <div class="row borderblr">
     <div class="twelvecol last">
       <div id="feedbackarea" onKeyUp="glob.correctionformKeyUp(window.event.target);">
 	<h2>訂正とコメント</h2>
