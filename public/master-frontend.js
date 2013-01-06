@@ -361,7 +361,7 @@ var glob = {
 			       });
     },
     "updateSummary": function(identifier) {
-	var selstudent = document.getElementById("selectstudent"),
+	var selstudent = document.getElementById("selectstudent") || {"value":"all"},
 	selassignment = document.getElementById("selectassignment"),
 	seltype = document.getElementById("selecttype"),
 	keys = [],
@@ -384,7 +384,7 @@ var glob = {
     },
     "resetSelect": function(elements) {
 	elements.forEach(function(element,index,elements) {
-			 element.value = "all";});
+			     element.value = "all";});
     },
     "updateStatTable": function(stats) {
 	var table = document.getElementById("stattable"),

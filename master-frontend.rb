@@ -57,8 +57,8 @@ class Errortag
   property :string, String
   property :type, String
   property :action, String
-  property :correction, String
-  property :comment, String
+  property :correction, String, :length => 300
+  property :comment, String, :length => 300
   
   belongs_to :composition
   belongs_to :student
@@ -130,7 +130,7 @@ class Response
   property :id, Serial
   property :understanding, String, :required => true
   property :agreement, String, :required => true
-  property :response, String
+  property :response, String, :length => 300
   property :viewed, Boolean, :default => false
   
   belongs_to :errortag
@@ -232,6 +232,11 @@ class MasterFrontend < Sinatra::Base
   before '/student/*' do
     confirm_or_redirect_user_type('Student')
   end
+  before '/errors/json' do
+    if session[:usertype] && session[:usertype] == "Student"
+      params.update({:student => session[:student_id]})
+    end
+  end
   get '/login' do
     erb :login
   end
@@ -288,6 +293,7 @@ class MasterFrontend < Sinatra::Base
     @student = Student.get(@composition.student_id)
     unless @composition.errortags.empty?
       @composition.errortags.destroy
+      p "destroyed!"
     end
     @errors = Hash[params.find_all {|k,v| k =~ /^[0-9]+$/ }]
     @errors.each do |k,v|
@@ -295,6 +301,8 @@ class MasterFrontend < Sinatra::Base
       e.composition = @composition
       e.student = @student
       e.save
+      p e.id
+      p "saved!"
     end
     redirect to '/teacher/dashboard'
   end
@@ -411,7 +419,7 @@ class MasterFrontend < Sinatra::Base
       # and assignment title this block becomes unnecessary
       ErrorPresentation.new(e)
       end
-    erb :t_errors
+    erb :s_errors
   end
   get '/wronguser' do
     erb :wronguser
