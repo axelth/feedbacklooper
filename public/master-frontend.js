@@ -361,6 +361,8 @@ var glob = {
 			       });
     },
     "updateSummary": function(identifier) {
+	// The || {"value":"all"} part is a hack to make this function work on both
+	// teacher and student pages (s_errors.erb has no "selecstudent" element)
 	var selstudent = document.getElementById("selectstudent") || {"value":"all"},
 	selassignment = document.getElementById("selectassignment"),
 	seltype = document.getElementById("selecttype"),
