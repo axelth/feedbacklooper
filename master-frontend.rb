@@ -402,6 +402,17 @@ class MasterFrontend < Sinatra::Base
     content_type :json
     errortags.to_json    
   end
+  get '/student/errors' do
+    @student = Student.get(session[:student_id])
+    completed_assignments = @student.compositions.collect {|c| c.assignment_id}
+    @assignments = Assignment.all(:id => completed_assignments)
+    @errortags = @student.errortags do |e|
+      # If I fix the Errortag class to have proper associtations for student name
+      # and assignment title this block becomes unnecessary
+      ErrorPresentation.new(e)
+      end
+    erb :t_errors
+  end
   get '/wronguser' do
     erb :wronguser
   end

@@ -2,7 +2,7 @@
 <% compositions.each do |c| %>
   <li>課題<%=c.assignment.title%>の
     <% errors = feedback.select {|e| e.composition == c} %>
-  <% if errors && errors.length > 0 && errors.first.responses.empty?%>
+  <% if errors && errors.length > 0 && errors.first.response.nil?%>
     <a href="<%=url('/student/respond/')%><%=c.id%>">フィードバックに回答する</a>
     <table class="s_errors">
       <% errors.each do |e| %>
