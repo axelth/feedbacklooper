@@ -360,7 +360,58 @@ var glob = {
 				   return a["start"] - b["start"];
 			       });
     },
-   
+    "updateSummary": function(identifier) {
+	var selstudent = document.getElementById("selectstudent"),
+	selassignment = document.getElementById("selectassignment"),
+	seltype = document.getElementById("selecttype"),
+	keys = [],
+	data;
+	if (identifier.substring(0,6) !== "select") {
+	    this.resetSelect([selstudent,selassignment,seltype]);
+	}
+	if (selstudent.value !== "all") {
+	    keys.push('student=' + selstudent.value);
+	}
+	if (selassignment.value !== "all") {
+	    keys.push('assignment=' + selassignment.value);
+	}
+	if (seltype.value !== "all") {
+	    keys.push('type=' + seltype.value);
+	}
+	data = JSON.parse(this.getJSON('/errors/json','?' + keys.join("&")));
+	this.updateStatTable(data.stats.nr_errors);
+	this.updateAllErrorTable(data.errors);
+    },
+    "resetSelect": function(elements) {
+	elements.forEach(function(element,index,elements) {
+			 element.value = "all";});
+    },
+    "updateStatTable": function(stats) {
+	var table = document.getElementById("stattable"),
+	oldbody = table.getElementsByTagName("tbody")[0], 
+	newbody = document.createElement("tbody"),
+	arr = [];
+	stats.forEach(function(pair,index,stats) {
+			   arr.push(pair.join("："));});
+	newbody.appendChild(this.createTblRow(arr));
+	table.replaceChild(newbody, oldbody);
+    },
+    "updateAllErrorTable": function(errorpres) {
+	var table = document.getElementById("allerrortable"),
+	oldbody = table.getElementsByTagName("tbody")[0],
+	newbody = document.createElement("tbody");
+	errorpres.forEach(function(error,index,errorpres) {
+			      var row = document.createElement('tr'),
+			      cell;
+			      for (key in error) {
+				  cell = row.insertCell(-1);
+				  cell.setAttribute('class', key);
+				  cell.innerHTML = error[key];
+				  }
+			      newbody.appendChild(row);
+			  },this);
+	table.replaceChild(newbody,oldbody);
+    },
     "getJSON": function getJSON(endpoint, identifier) {
 	var req = new XMLHttpRequest(),
 	response;
@@ -384,9 +435,13 @@ var glob = {
     "elementThere": function elementThere(name) {
 	return Boolean(document.getElementById(name));
     },
-    "doIfElement": function doIfElement(eltid, func) {
+    "doIfElement": function doIfElement(eltid, func, arg) {
 	if (document.getElementById(eltid)) {
-	    this[func]();	    
+	    if (arg !== undefined) {
+		this[func](arg);
+	    } else {
+		this[func]();
+	    }
 	}
     }
 };

@@ -134,8 +134,7 @@ span.error > span.error {
     background-color: navajowhite;
 }
 
-/* begin: s_respond.erb */
-}
+/* begin: s_respond.erb t_errors.rb*/
 table.s_errors {
     width: 100%;
 }
@@ -155,13 +154,13 @@ table.s_errors td.error, table.s_errors td.correction {
 #allerrortable td, #feedbacktable td, #responsetable td {
     border-bottom: dashed black 1px;
 }
-#allerrortable td.correction, #allerrortable td.string, #feedbacktable td.correction {
+#feedbacktable td.correction {
     width: 15%;
 }
 #feedbacktable td.comment {
     width: 35%;
 }
-#allerrortable td.title, #allerrortable td.name, #allerrortable td.type, #feedbacktable td.understanding, #feedbacktable td.agreement {
+#feedbacktable td.understanding, #feedbacktable td.agreement {
     width: 7%;
 }
 #feedbacktable td.response {
@@ -169,6 +168,21 @@ table.s_errors td.error, table.s_errors td.correction {
 }
 #feedbacktable td.response > input {
     width: 100%;
+}
+#allerrortable {
+    font-size: 8pt;
+}
+#allerrortable td.correction, #allerrortable td.string {
+    width: 10%;
+}
+#allerrortable td.title, #allerrortable td.name, #allerrortable td.type {
+    width: 6%;
+}
+#allerrortable td.comment, #allerrortable td.response {
+    width: 20%;
+}
+#allerrortable td.context {
+    width: 25%;
 }
 /*#feedbacktable select{
     width: 50px;

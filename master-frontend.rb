@@ -8,6 +8,7 @@ require 'sinatra/base'
 require 'sinatra/partial'
 require 'data_mapper'
 require 'dm-sqlite-adapter'
+require 'json'
 
 DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/db/database.db")
 
@@ -61,8 +62,8 @@ class Errortag
   
   belongs_to :composition
   belongs_to :student
-  has n, :responses
-
+  has 1, :response
+  
   def sentence_arr
     text = self.composition.content
     sent_start = text.rindex(/[。？?！!\n]/,self.start) || 0
@@ -128,7 +129,6 @@ class Response
   include DataMapper::Resource
   property :id, Serial
   property :understanding, String, :required => true
-  # I must change the name of this property to "response" here and in the view
   property :agreement, String, :required => true
   property :response, String
   property :viewed, Boolean, :default => false
@@ -137,6 +137,42 @@ class Response
   belongs_to :student
 end
 
+# Helper class that is needed because the error tag doesn't have associations for
+# student name and assignment title, and getting response properties might fail if there is no response
+class ErrorPresentation
+  attr_reader :name,:type,:string,:correction,:comment, :context,:understanding,:agreement,:response,:title                                     
+  def initialize(e)
+    @name = Student.get(e.student_id).name
+    @type = e.type
+    @string = e.string
+    @correction = e.correction
+    @comment = e.comment
+    @context = e.styled_line_no_breaks
+    @title = Assignment.get(Composition.get(e.composition_id).assignment_id).title
+    begin
+      @understanding = e.response.understanding
+      @agreement = e.response.agreement
+      @response = e.response.response
+    rescue
+      @understanding = @agreement = @response = ""
+    end
+  end
+  def to_h
+    {name:@name,
+      type:@type,
+      string:@string,
+      correction:@correction,
+      comment:@comment,
+      understanding:@understanding,
+      agreement:@agreement,
+      response:@response,
+      context:@context,
+      title:@title}
+  end
+  def to_json(state = nil)
+    self.to_h.to_json(state)
+  end
+end
 #For a start, let's let the feedback be part of the errortag object
 # class Feedback
 #   include DataMapper::Resource
@@ -277,17 +313,40 @@ class MasterFrontend < Sinatra::Base
     errortags.to_json
   end
   get '/teacher/errors' do
+    students_with_errors = repository(:default).adapter.select('SELECT student_id FROM errortags').uniq
+    @students = Student.all(:id => students_with_errors)
+    p @students
+    @assignments = Assignment.all()
     @errortags = Errortag.all.collect do |e|
-      struct = Struct.new(:name,:type,:string,:correction,:context,:title)
-      struct.new(Student.get(e.student_id).name,
-                 e.type,
-                 e.string,
-                 e.correction,
-                 e.styled_line_no_breaks,
-                 Assignment.get(Composition.get(e.composition_id).assignment_id).title)
+      # If I fix the Errortag class to have proper associtations for student name
+      # and assignment title this block becomes unnecessary
+      ErrorPresentation.new(e)
       end
-    
     erb :t_errors
+  end
+  get '/errors/json' do
+    res = {:stats => {},:errors => []}
+    s_cond = params[:student] ? {:id => params[:student]} : {}
+    e_cond = params[:type] ? {:type.like => params[:type]} : {}
+    a_cond = params[:assignment] ? {:assignment_id => params[:assignment]} : {}
+    order = params[:order] ? [params[:order].to_sym] : [] 
+    @student = Student.all(:conditions => s_cond)
+    e_cond[:composition] = Composition.all(:conditions => a_cond)
+    e_cond[:student] = @student
+    res[:stats][:student] = @student.first.name if @student.length == 1
+    res[:stats][:nr_errors] = Errortag.aggregate(:all.count, :fields => [:type], :conditions => e_cond)
+    res[:errors] += Errortag.all(:conditions => e_cond).collect {|e| ErrorPresentation.new(e)}
+    # errors by student
+    # errors by assignment
+    # errors by type
+    ## errors by understanding
+    ## errors by agreement
+    # common statistics for all filters
+    ## number of errors by type Errortag.aggregate(:all.count, :fields => [:type])
+    ## average understanding and agreement for all types
+    ## etc..
+    content_type :json
+    res.to_json
   end
   get '/teacher/students' do
     @students = Students.all
