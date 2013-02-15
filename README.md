@@ -15,6 +15,8 @@ Currently, Feedbacklooper provides the following functionality
 Ruby 1.9+,
 sqlite3 
 
+(client requirements: Safari)
+
 ## Install gems
 bundle install
 
