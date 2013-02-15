@@ -1,3 +1,14 @@
+# Overview
+Feedbacklooper is a prototype system for managment of written assignments and composition feedback in foreign/second language education. The current version is geared towards use in Japanese education but future versions will support different languages.
+
+Currently, Feedbacklooper provides the following functionality
+* creating assignments (Teacher)
+* turning in compositions in response to assignments (student)
+* review compositions (Teacher/student)
+* giving feedback to compositions (Teacher)
+* responding to feedback (student)
+* reviewing feedback and responses (Teacher/student)
+
 # Setup
 ## System requirements
 *nix,
