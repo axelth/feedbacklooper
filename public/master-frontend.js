@@ -4,12 +4,7 @@ javascript.nwbox.com/cursor_position/
 TODO What to do with overlapping tags?
 TODO Add edit-button to errorlist
 TODO Reset selection upon error creation?
-TODO decrease dependence on glob.variables.  Pass in more parameters to functions.
-Q: I need to re-learn when a passed in object is modified in js.
-   Answer: object are always passed by reference and therefor allways modified.
-TODO decrease coupling between html and js (pass id-attributes to functions).
-Because I don't quite understand when objects are modified my current attempts att decoupling
-are not going well at all
+TODO decrease coupling between backend and frontend.
 */
 var glob = {
     "name" : "glob",
