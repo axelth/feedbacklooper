@@ -4,6 +4,8 @@ if RUBY_PLATFORM == 'java'
   require 'lib/sqlite-jdbc-3.5.9.jar'
 end
 require 'erb'
+gem 'rack', '=1.4.1'
+require 'rack'
 require 'sinatra/base'
 require 'sinatra/partial'
 require 'data_mapper'
