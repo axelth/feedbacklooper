@@ -14,4 +14,6 @@ ruby util/db-setup.rb
 ruby master-frontend.rb
 
 # Usage
-access http://localhost:8080/login and login as either 'Teacher', or any of 'Joel', 'Thomas', 'Timor' or 'Robert'
+Access http://localhost:8080/login and login as either 'Teacher', or any of the students 'Joel', 'Thomas', 'Timor' or 'Robert'
+
+Try logging in as a student, submit a composition, log out and log back in as the teacher and add feedback to the composition.
