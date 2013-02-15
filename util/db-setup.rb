@@ -9,7 +9,8 @@ begin
 end
 
 begin
-
+  Dir.mkdir("db") unless Dir.exists?("db")
+  
   puts "Create tables"
   DataMapper.auto_migrate!
   puts "Create teacher"
